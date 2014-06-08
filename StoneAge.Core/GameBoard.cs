@@ -1,11 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace StoneAge.Core
 {
     public class GameBoard
     {
-        public readonly IDictionary<PlayerColor, int> Scores = new Dictionary<PlayerColor, int>();
-        public readonly IDictionary<PlayerColor, int> FoodTrack = new Dictionary<PlayerColor, int>();
+        public const int TOTAL_WOOD = 20;
+        public const int TOTAL_BRICK = 16;
+        public const int TOTAL_STONE = 12;
+        public const int TOTAL_GOLD = 10;
+
+        public int Wood;
+        public int Brick;
+        public int Stone;
+        public int Gold;
+
+        public List<PlayerBoard> Players = new List<PlayerBoard>();
+
+        public PlayerBoard Current
+        {
+            get
+            {
+                return Players[_current];
+            }
+        }
 
         public GameBoard()
             : this(PlayerColor.Blue, PlayerColor.Green, PlayerColor.Red, PlayerColor.Yellow)
@@ -14,15 +32,30 @@ namespace StoneAge.Core
 
         public GameBoard(params PlayerColor[] args)
         {
-            foreach (PlayerColor color in args)
+            for (int i = 0; i < args.Length; i++)
             {
-                Scores.Add(color, STARTING_SCORE);
-                FoodTrack.Add(color, STARTING_FOOD_TRACK);
+                var player = new PlayerBoard(args[i])
+                {
+                    Name = _defaultPlayers[i],
+                };
+                Players.Add(player);
             }
+
+            Wood = TOTAL_WOOD;
+            Brick = TOTAL_BRICK;
+            Stone = TOTAL_STONE;
+            Gold = TOTAL_GOLD;
         }
 
-        private const int STARTING_SCORE = 0;
-        private const int STARTING_FOOD_TRACK = 0;
+        public void Next()
+        {
+            ++_current;
+            if (_current >= Players.Count())
+                _current = 0;
+        }
+
+        private string[] _defaultPlayers = new [] { "Harry", "Mary", "Frank", "Jane" };
+        private int _current = 0;
     }
 
     public class PlayerBoard
@@ -31,7 +64,10 @@ namespace StoneAge.Core
         public int Food;
         public readonly IDictionary<Resource, int> Resources = new Dictionary<Resource, int>();
         public int People;
-        public readonly Tool[] Tools = new Tool[3]; 
+        public readonly Tool[] Tools = new Tool[3];
+        public string Name;
+        public int FoodTrack;
+        public int Score;
 
         public PlayerBoard(PlayerColor color)
         {
@@ -49,11 +85,18 @@ namespace StoneAge.Core
             Tools[0] = Tool.None;
             Tools[1] = Tool.None;
             Tools[2] = Tool.None;
+
+            FoodTrack = STARTING_FOOD_TRACK;
+            Score = STARTING_SCORE;
         }
 
         private const int STARTING_PEOPLE_COUNT = 5;
         private const int STARTING_FOOD_COUNT = 12;
         private const int STARTING_RESOURCE_COUNT = 0;
+        private const int STARTING_FOOD_TRACK = 0;
+        private const int STARTING_SCORE = 0;
+        private const int MAX_PEOPLE_COUNT = 10;
+        private const int MAX_FOOD_TRACK = 10;
     }
 
     public enum Tool
