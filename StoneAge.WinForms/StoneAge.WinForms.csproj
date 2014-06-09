@@ -52,6 +52,12 @@
     <Compile Include="Controls\LimitedLocation.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\PlayerDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PlayerDisplay.Designer.cs">
+      <DependentUpon>PlayerDisplay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PlayerMarkers.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -63,6 +69,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\PlayerDisplay.resx">
+      <DependentUpon>PlayerDisplay.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

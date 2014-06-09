@@ -7,18 +7,23 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StoneAge.Core;
+using StoneAge.WinForms.Controls;
 
 namespace StoneAge.WinForms
 {
     public partial class MainForm : Form
     {
-        public GameBoard Game;
+        public static GameBoard Game;
 
         public MainForm()
         {
             InitializeComponent();
 
             Game = new GameBoard();
+            playerDisplay1.SetPlayerBoard(Game.Players[0]);
+            playerDisplay2.SetPlayerBoard(Game.Players[1]);
+            playerDisplay3.SetPlayerBoard(Game.Players[2]);
+            playerDisplay4.SetPlayerBoard(Game.Players[3]);
 
             UpdateCurrentPlayerName();
             UpdateRemaingResourceCounts();
@@ -41,13 +46,16 @@ namespace StoneAge.WinForms
         private void buttonDone_Click(object sender, EventArgs e)
         {
             Game.Next();
+
             UpdateCurrentPlayerName();
+            playerDisplay1.RefreshControls();
+            playerDisplay2.RefreshControls();
+            playerDisplay3.RefreshControls();
+            playerDisplay4.RefreshControls();
         }
 
         private void buttonLOCATION_Click(object sender, EventArgs e)
         {
-            var button = sender as Button;
-            button.BackColor = Game.Current.Color.ToDrawingColor();
         }
     }
 
@@ -68,6 +76,13 @@ namespace StoneAge.WinForms
                 default:
                     throw new Exception("Color not mapped yet!");
             }
+        }
+
+        public static Color ToDrawingColor(this PlayerColor? color, Color defaultColor)
+        {
+            if (color.HasValue)
+                return color.Value.ToDrawingColor();
+            return defaultColor;
         }
     }
 }

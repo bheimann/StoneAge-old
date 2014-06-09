@@ -16,6 +16,7 @@ namespace StoneAge.Core
         public int Gold;
 
         public List<PlayerBoard> Players = new List<PlayerBoard>();
+        public Dictionary<BoardSpace, Space> Spaces = new Dictionary<BoardSpace, Space>();
 
         public PlayerBoard Current
         {
@@ -45,6 +46,18 @@ namespace StoneAge.Core
             Brick = TOTAL_BRICK;
             Stone = TOTAL_STONE;
             Gold = TOTAL_GOLD;
+
+            AddedDefaultSpaces();
+        }
+
+        private void AddedDefaultSpaces()
+        {
+            var boardSpaces = System.Enum.GetValues(typeof(BoardSpace)).Cast<BoardSpace>().Where(bs => bs != BoardSpace.HuntingGrounds);
+
+            foreach (var boardSpace in boardSpaces)
+            {
+                Spaces.Add(boardSpace, new Space());
+            }
         }
 
         public void Next()
@@ -52,10 +65,46 @@ namespace StoneAge.Core
             ++_current;
             if (_current >= Players.Count())
                 _current = 0;
+
+            foreach (Space space in Spaces.Values)
+            {
+                if (space.HeldBy == null)
+                {
+                    space.HeldBy = space.ThinkingOf;
+                    space.ThinkingOf = null;
+                }
+            }
+        }
+
+
+        public void TryToOccupySpace(BoardSpace Space)
+        {
+            if (Spaces[Space].HeldBy.HasValue)
+                return;
+
+            if (Spaces[Space].ThinkingOf == null)
+                Spaces[Space].ThinkingOf = Current.Color;
+            else
+                Spaces[Space].ThinkingOf = null;
+        }
+
+        public PlayerColor? ColorOFSpace(BoardSpace Space)
+        {
+            if (Spaces[Space].HeldBy.HasValue)
+            {
+                return Spaces[Space].HeldBy;
+            }
+            return Spaces[Space].ThinkingOf;
         }
 
         private string[] _defaultPlayers = new [] { "Harry", "Mary", "Frank", "Jane" };
         private int _current = 0;
+    }
+
+    public class Space
+    {
+        public PlayerColor? HeldBy;
+        public PlayerColor? ThinkingOf;
     }
 
     public class PlayerBoard
@@ -99,13 +148,22 @@ namespace StoneAge.Core
         private const int MAX_FOOD_TRACK = 10;
     }
 
-    public enum Tool
+    public struct Tool
     {
-        None,
-        Plus1,
-        Plus2,
-        Plus3,
-        Plus4,
+        public static Tool None  { get { return new Tool(0); } }
+        public static Tool Plus1 { get { return new Tool(1); } }
+        public static Tool Plus2 { get { return new Tool(2); } }
+        public static Tool Plus3 { get { return new Tool(3); } }
+        public static Tool Plus4 { get { return new Tool(4); } }
+
+        public bool Used;
+        public readonly int Value;
+
+        private Tool(int value)
+	    {
+            Value = value;
+            Used = false;
+	    }
     }
 
     public enum PlayerColor
@@ -119,13 +177,38 @@ namespace StoneAge.Core
     public enum BoardSpace
     {
         HuntingGrounds,
-        Forest,
-        ClayPit,
-        Quarry,
-        River,
-        ToolMaker,
-        Hut,
-        Field,
+        Forest1,
+        Forest2,
+        Forest3,
+        Forest4,
+        Forest5,
+        Forest6,
+        Forest7,
+        ClayPit1,
+        ClayPit2,
+        ClayPit3,
+        ClayPit4,
+        ClayPit5,
+        ClayPit6,
+        ClayPit7,
+        Quarry1,
+        Quarry2,
+        Quarry3,
+        Quarry4,
+        Quarry5,
+        Quarry6,
+        Quarry7,
+        River1,
+        River2,
+        River3,
+        River4,
+        River5,
+        River6,
+        River7,
+        ToolMaker1,
+        Hut1,
+        Hut2,
+        Field1,
         CivilizationCardSlot1,
         CivilizationCardSlot2,
         CivilizationCardSlot3,
