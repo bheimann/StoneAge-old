@@ -5,17 +5,20 @@ using System.Windows.Forms;
 
 namespace StoneAge.WinForms
 {
-    static class Program
+    public static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
+            var appSettings = new AppSettings();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            if (appSettings.ShowSplashScreen)
+                Application.Run(new WelcomeScreenForm());
+            var gameBoard = new Core.GameBoard();
+            if (appSettings.ShowChoosePlayersScreen)
+                Application.Run(new ChoosePlayersForm(gameBoard));
+            Application.Run(new MainForm(gameBoard));
         }
     }
 }

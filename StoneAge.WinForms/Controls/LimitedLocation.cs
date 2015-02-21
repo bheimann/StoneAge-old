@@ -26,7 +26,7 @@ namespace StoneAge.WinForms.Controls
 
             Game.TryToOccupySpace(Space);
 
-            BackColor = Game.ColorOFSpace(Space).ToDrawingColor(SystemColors.Control);
+            BackColor = Game.ColorOfSpace(Space).ToDrawingColor(SystemColors.Control);
         }
     }
 }

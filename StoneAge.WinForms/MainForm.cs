@@ -15,11 +15,15 @@ namespace StoneAge.WinForms
     {
         public static GameBoard Game;
 
-        public MainForm()
+        public MainForm() : this(new GameBoard())
+        {
+        }
+
+        public MainForm(GameBoard gameBoard)
         {
             InitializeComponent();
 
-            Game = new GameBoard();
+            Game = gameBoard;
             playerDisplay1.SetPlayerBoard(Game.Players[0]);
             playerDisplay2.SetPlayerBoard(Game.Players[1]);
             playerDisplay3.SetPlayerBoard(Game.Players[2]);
@@ -52,10 +56,6 @@ namespace StoneAge.WinForms
             playerDisplay2.RefreshControls();
             playerDisplay3.RefreshControls();
             playerDisplay4.RefreshControls();
-        }
-
-        private void buttonLOCATION_Click(object sender, EventArgs e)
-        {
         }
     }
 

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.labelHuntingGrounds = new System.Windows.Forms.Label();
             this.labelForest = new System.Windows.Forms.Label();
             this.labelClayPit = new System.Windows.Forms.Label();
@@ -90,6 +91,7 @@
             this.buttonFo3 = new StoneAge.WinForms.Controls.LimitedLocation();
             this.buttonFo2 = new StoneAge.WinForms.Controls.LimitedLocation();
             this.buttonFo1 = new StoneAge.WinForms.Controls.LimitedLocation();
+            this.labelPhase = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelHuntingGrounds
@@ -301,7 +303,6 @@
             this.buttonCC1.Space = StoneAge.Core.BoardSpace.CivilizationCardSlot1;
             this.buttonCC1.TabIndex = 56;
             this.buttonCC1.UseVisualStyleBackColor = false;
-            this.buttonCC1.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCC2
             // 
@@ -312,7 +313,6 @@
             this.buttonCC2.Space = StoneAge.Core.BoardSpace.CivilizationCardSlot2;
             this.buttonCC2.TabIndex = 55;
             this.buttonCC2.UseVisualStyleBackColor = false;
-            this.buttonCC2.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCC3
             // 
@@ -323,7 +323,6 @@
             this.buttonCC3.Space = StoneAge.Core.BoardSpace.CivilizationCardSlot3;
             this.buttonCC3.TabIndex = 54;
             this.buttonCC3.UseVisualStyleBackColor = false;
-            this.buttonCC3.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCC4
             // 
@@ -334,7 +333,6 @@
             this.buttonCC4.Space = StoneAge.Core.BoardSpace.CivilizationCardSlot4;
             this.buttonCC4.TabIndex = 53;
             this.buttonCC4.UseVisualStyleBackColor = false;
-            this.buttonCC4.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonBT4
             // 
@@ -345,7 +343,6 @@
             this.buttonBT4.Space = StoneAge.Core.BoardSpace.BuildingTileSlot4;
             this.buttonBT4.TabIndex = 52;
             this.buttonBT4.UseVisualStyleBackColor = false;
-            this.buttonBT4.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonBT3
             // 
@@ -356,7 +353,6 @@
             this.buttonBT3.Space = StoneAge.Core.BoardSpace.BuildingTileSlot3;
             this.buttonBT3.TabIndex = 51;
             this.buttonBT3.UseVisualStyleBackColor = false;
-            this.buttonBT3.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonBT2
             // 
@@ -367,7 +363,6 @@
             this.buttonBT2.Space = StoneAge.Core.BoardSpace.BuildingTileSlot2;
             this.buttonBT2.TabIndex = 50;
             this.buttonBT2.UseVisualStyleBackColor = false;
-            this.buttonBT2.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonBT1
             // 
@@ -378,7 +373,6 @@
             this.buttonBT1.Space = StoneAge.Core.BoardSpace.BuildingTileSlot1;
             this.buttonBT1.TabIndex = 49;
             this.buttonBT1.UseVisualStyleBackColor = false;
-            this.buttonBT1.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonFi1
             // 
@@ -389,7 +383,6 @@
             this.buttonFi1.Space = StoneAge.Core.BoardSpace.Field1;
             this.buttonFi1.TabIndex = 48;
             this.buttonFi1.UseVisualStyleBackColor = false;
-            this.buttonFi1.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonHu2
             // 
@@ -400,7 +393,6 @@
             this.buttonHu2.Space = StoneAge.Core.BoardSpace.Hut2;
             this.buttonHu2.TabIndex = 47;
             this.buttonHu2.UseVisualStyleBackColor = false;
-            this.buttonHu2.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonHu1
             // 
@@ -411,7 +403,6 @@
             this.buttonHu1.Space = StoneAge.Core.BoardSpace.Hut1;
             this.buttonHu1.TabIndex = 46;
             this.buttonHu1.UseVisualStyleBackColor = false;
-            this.buttonHu1.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonTM1
             // 
@@ -422,7 +413,6 @@
             this.buttonTM1.Space = StoneAge.Core.BoardSpace.ToolMaker1;
             this.buttonTM1.TabIndex = 45;
             this.buttonTM1.UseVisualStyleBackColor = false;
-            this.buttonTM1.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonRi7
             // 
@@ -433,7 +423,6 @@
             this.buttonRi7.Space = StoneAge.Core.BoardSpace.River7;
             this.buttonRi7.TabIndex = 44;
             this.buttonRi7.UseVisualStyleBackColor = false;
-            this.buttonRi7.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonRi6
             // 
@@ -444,7 +433,6 @@
             this.buttonRi6.Space = StoneAge.Core.BoardSpace.River6;
             this.buttonRi6.TabIndex = 43;
             this.buttonRi6.UseVisualStyleBackColor = false;
-            this.buttonRi6.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonRi5
             // 
@@ -455,7 +443,6 @@
             this.buttonRi5.Space = StoneAge.Core.BoardSpace.River5;
             this.buttonRi5.TabIndex = 42;
             this.buttonRi5.UseVisualStyleBackColor = false;
-            this.buttonRi5.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonRi4
             // 
@@ -466,7 +453,6 @@
             this.buttonRi4.Space = StoneAge.Core.BoardSpace.River4;
             this.buttonRi4.TabIndex = 41;
             this.buttonRi4.UseVisualStyleBackColor = false;
-            this.buttonRi4.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonRi3
             // 
@@ -477,7 +463,6 @@
             this.buttonRi3.Space = StoneAge.Core.BoardSpace.River3;
             this.buttonRi3.TabIndex = 40;
             this.buttonRi3.UseVisualStyleBackColor = false;
-            this.buttonRi3.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonRi2
             // 
@@ -488,7 +473,6 @@
             this.buttonRi2.Space = StoneAge.Core.BoardSpace.River2;
             this.buttonRi2.TabIndex = 39;
             this.buttonRi2.UseVisualStyleBackColor = false;
-            this.buttonRi2.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonRi1
             // 
@@ -499,7 +483,6 @@
             this.buttonRi1.Space = StoneAge.Core.BoardSpace.River1;
             this.buttonRi1.TabIndex = 38;
             this.buttonRi1.UseVisualStyleBackColor = false;
-            this.buttonRi1.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonQu7
             // 
@@ -510,7 +493,6 @@
             this.buttonQu7.Space = StoneAge.Core.BoardSpace.Quarry7;
             this.buttonQu7.TabIndex = 37;
             this.buttonQu7.UseVisualStyleBackColor = false;
-            this.buttonQu7.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonQu6
             // 
@@ -521,7 +503,6 @@
             this.buttonQu6.Space = StoneAge.Core.BoardSpace.Quarry6;
             this.buttonQu6.TabIndex = 36;
             this.buttonQu6.UseVisualStyleBackColor = false;
-            this.buttonQu6.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonQu5
             // 
@@ -532,7 +513,6 @@
             this.buttonQu5.Space = StoneAge.Core.BoardSpace.Quarry5;
             this.buttonQu5.TabIndex = 35;
             this.buttonQu5.UseVisualStyleBackColor = false;
-            this.buttonQu5.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonQu4
             // 
@@ -543,7 +523,6 @@
             this.buttonQu4.Space = StoneAge.Core.BoardSpace.Quarry4;
             this.buttonQu4.TabIndex = 34;
             this.buttonQu4.UseVisualStyleBackColor = false;
-            this.buttonQu4.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonQu3
             // 
@@ -554,7 +533,6 @@
             this.buttonQu3.Space = StoneAge.Core.BoardSpace.Quarry3;
             this.buttonQu3.TabIndex = 33;
             this.buttonQu3.UseVisualStyleBackColor = false;
-            this.buttonQu3.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonQu2
             // 
@@ -565,7 +543,6 @@
             this.buttonQu2.Space = StoneAge.Core.BoardSpace.Quarry2;
             this.buttonQu2.TabIndex = 32;
             this.buttonQu2.UseVisualStyleBackColor = false;
-            this.buttonQu2.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonQu1
             // 
@@ -576,7 +553,6 @@
             this.buttonQu1.Space = StoneAge.Core.BoardSpace.Quarry1;
             this.buttonQu1.TabIndex = 31;
             this.buttonQu1.UseVisualStyleBackColor = false;
-            this.buttonQu1.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCP7
             // 
@@ -587,7 +563,6 @@
             this.buttonCP7.Space = StoneAge.Core.BoardSpace.ClayPit7;
             this.buttonCP7.TabIndex = 30;
             this.buttonCP7.UseVisualStyleBackColor = false;
-            this.buttonCP7.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCP6
             // 
@@ -598,7 +573,6 @@
             this.buttonCP6.Space = StoneAge.Core.BoardSpace.ClayPit6;
             this.buttonCP6.TabIndex = 29;
             this.buttonCP6.UseVisualStyleBackColor = false;
-            this.buttonCP6.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCP5
             // 
@@ -609,7 +583,6 @@
             this.buttonCP5.Space = StoneAge.Core.BoardSpace.ClayPit5;
             this.buttonCP5.TabIndex = 28;
             this.buttonCP5.UseVisualStyleBackColor = false;
-            this.buttonCP5.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCP4
             // 
@@ -620,7 +593,6 @@
             this.buttonCP4.Space = StoneAge.Core.BoardSpace.ClayPit4;
             this.buttonCP4.TabIndex = 27;
             this.buttonCP4.UseVisualStyleBackColor = false;
-            this.buttonCP4.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCP3
             // 
@@ -631,7 +603,6 @@
             this.buttonCP3.Space = StoneAge.Core.BoardSpace.ClayPit3;
             this.buttonCP3.TabIndex = 26;
             this.buttonCP3.UseVisualStyleBackColor = false;
-            this.buttonCP3.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCP2
             // 
@@ -642,7 +613,6 @@
             this.buttonCP2.Space = StoneAge.Core.BoardSpace.ClayPit2;
             this.buttonCP2.TabIndex = 25;
             this.buttonCP2.UseVisualStyleBackColor = false;
-            this.buttonCP2.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonCP1
             // 
@@ -653,7 +623,6 @@
             this.buttonCP1.Space = StoneAge.Core.BoardSpace.ClayPit1;
             this.buttonCP1.TabIndex = 24;
             this.buttonCP1.UseVisualStyleBackColor = false;
-            this.buttonCP1.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonFo7
             // 
@@ -664,7 +633,6 @@
             this.buttonFo7.Space = StoneAge.Core.BoardSpace.Forest7;
             this.buttonFo7.TabIndex = 23;
             this.buttonFo7.UseVisualStyleBackColor = false;
-            this.buttonFo7.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonFo6
             // 
@@ -675,7 +643,6 @@
             this.buttonFo6.Space = StoneAge.Core.BoardSpace.Forest6;
             this.buttonFo6.TabIndex = 22;
             this.buttonFo6.UseVisualStyleBackColor = false;
-            this.buttonFo6.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonFo5
             // 
@@ -686,7 +653,6 @@
             this.buttonFo5.Space = StoneAge.Core.BoardSpace.Forest5;
             this.buttonFo5.TabIndex = 21;
             this.buttonFo5.UseVisualStyleBackColor = false;
-            this.buttonFo5.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonFo4
             // 
@@ -697,7 +663,6 @@
             this.buttonFo4.Space = StoneAge.Core.BoardSpace.Forest4;
             this.buttonFo4.TabIndex = 20;
             this.buttonFo4.UseVisualStyleBackColor = false;
-            this.buttonFo4.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonFo3
             // 
@@ -708,7 +673,6 @@
             this.buttonFo3.Space = StoneAge.Core.BoardSpace.Forest3;
             this.buttonFo3.TabIndex = 19;
             this.buttonFo3.UseVisualStyleBackColor = false;
-            this.buttonFo3.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonFo2
             // 
@@ -719,7 +683,6 @@
             this.buttonFo2.Space = StoneAge.Core.BoardSpace.Forest2;
             this.buttonFo2.TabIndex = 18;
             this.buttonFo2.UseVisualStyleBackColor = false;
-            this.buttonFo2.Click += new System.EventHandler(this.buttonLOCATION_Click);
             // 
             // buttonFo1
             // 
@@ -730,13 +693,22 @@
             this.buttonFo1.Space = StoneAge.Core.BoardSpace.Forest1;
             this.buttonFo1.TabIndex = 17;
             this.buttonFo1.UseVisualStyleBackColor = false;
-            this.buttonFo1.Click += new System.EventHandler(this.buttonLOCATION_Click);
+            // 
+            // labelPhase
+            // 
+            this.labelPhase.AutoSize = true;
+            this.labelPhase.Location = new System.Drawing.Point(187, 45);
+            this.labelPhase.Name = "labelPhase";
+            this.labelPhase.Size = new System.Drawing.Size(40, 13);
+            this.labelPhase.TabIndex = 67;
+            this.labelPhase.Text = "Phase:";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1350, 730);
+            this.Controls.Add(this.labelPhase);
             this.Controls.Add(this.playerDisplay4);
             this.Controls.Add(this.playerDisplay3);
             this.Controls.Add(this.playerDisplay2);
@@ -799,6 +771,7 @@
             this.Controls.Add(this.labelClayPit);
             this.Controls.Add(this.labelForest);
             this.Controls.Add(this.labelHuntingGrounds);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "Stone Age";
             this.ResumeLayout(false);
@@ -870,6 +843,7 @@
         private Controls.PlayerDisplay playerDisplay2;
         private Controls.PlayerDisplay playerDisplay3;
         private Controls.PlayerDisplay playerDisplay4;
+        private System.Windows.Forms.Label labelPhase;
     }
 }
 
