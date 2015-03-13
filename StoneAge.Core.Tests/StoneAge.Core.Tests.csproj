@@ -40,13 +40,17 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildingTileTest.cs" />
-    <Compile Include="CardTest.cs" />
+    <Compile Include="ChooseAtRandomTest.cs" />
+    <Compile Include="GameTest.cs" />
+    <Compile Include="Models\BuildingTileTest.cs" />
+    <Compile Include="Models\CardTest.cs" />
     <Compile Include="DicePouchTest.cs" />
     <Compile Include="DiceResultTest.cs" />
-    <Compile Include="GameBoardTest.cs" />
-    <Compile Include="PlayerBoardTest.cs" />
+    <Compile Include="Models\GameBoardTest.cs" />
+    <Compile Include="Models\PlayerBoardTest.cs" />
+    <Compile Include="Models\PlayerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShuffleTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

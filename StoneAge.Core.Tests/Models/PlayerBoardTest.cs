@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
+using StoneAge.Core.Models;
 
-namespace StoneAge.Core.Tests
+namespace StoneAge.Core.Tests.Models
 {
     [TestFixture]
     public class PlayerBoardTest
@@ -8,9 +9,8 @@ namespace StoneAge.Core.Tests
         [Test]
         public void NewPlayerBoardStartsWithDefaults()
         {
-            var board = new PlayerBoard(PlayerColor.Blue);
+            var board = new PlayerBoard();
 
-            Assert.AreEqual(PlayerColor.Blue, board.Color);
             Assert.AreEqual(12, board.Food);
             Assert.AreEqual(5, board.People);
 

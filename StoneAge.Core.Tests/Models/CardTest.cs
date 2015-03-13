@@ -1,7 +1,8 @@
 ﻿using NUnit.Framework;
+using StoneAge.Core.Models;
 using System.Linq;
 
-namespace StoneAge.Core.Tests
+namespace StoneAge.Core.Tests.Models
 {
     [TestFixture]
     public class CardTest

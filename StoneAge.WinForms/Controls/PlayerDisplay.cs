@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StoneAge.Core;
+using StoneAge.Core.Models;
 
 namespace StoneAge.WinForms.Controls
 {
@@ -17,17 +18,18 @@ namespace StoneAge.WinForms.Controls
             InitializeComponent();
         }
 
-        public void SetPlayerBoard(PlayerBoard playerBoard)
+        public void SetPlayerBoard(Player player)
         {
-            _playerBoard = playerBoard;
+            _player = player;
+            _playerBoard = player.PlayerBoard;
 
             RefreshControls();
         }
 
         public void RefreshControls()
         {
-            labelPlayerName.Text = _playerBoard.Name;
-            labelPlayerName.ForeColor = _playerBoard.Color.ToDrawingColor();
+            labelPlayerName.Text = _player.Name;
+            labelPlayerName.ForeColor = _player.Color.ToDrawingColor();
             labelScoreValue.Text = _playerBoard.Score.ToString();
             labelPeopleRemaining.Text = _playerBoard.People.ToString();
             labelFoodTrackValue.Text = _playerBoard.FoodTrack.ToString();
@@ -44,6 +46,7 @@ namespace StoneAge.WinForms.Controls
             labelTool3.Font = _playerBoard.Tools[2].Used ? new Font(labelTool3.Font, FontStyle.Strikeout) : new Font(labelTool3.Font, FontStyle.Regular);
         }
 
+        private Player _player;
         private PlayerBoard _playerBoard;
     }
 }

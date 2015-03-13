@@ -7,27 +7,28 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StoneAge.Core;
+using StoneAge.Core.Models;
 using StoneAge.WinForms.Controls;
 
 namespace StoneAge.WinForms
 {
     public partial class MainForm : Form
     {
-        public static GameBoard Game;
+        public static Game Game;
 
-        public MainForm() : this(new GameBoard())
+        public MainForm() : this(new Game())
         {
         }
 
-        public MainForm(GameBoard gameBoard)
+        public MainForm(Game gameBoard)
         {
             InitializeComponent();
 
             Game = gameBoard;
-            playerDisplay1.SetPlayerBoard(Game.Players[0]);
-            playerDisplay2.SetPlayerBoard(Game.Players[1]);
-            playerDisplay3.SetPlayerBoard(Game.Players[2]);
-            playerDisplay4.SetPlayerBoard(Game.Players[3]);
+            //playerDisplay1.SetPlayerBoard(Game.Players[0]);
+            //playerDisplay2.SetPlayerBoard(Game.Players[1]);
+            //playerDisplay3.SetPlayerBoard(Game.Players[2]);
+            //playerDisplay4.SetPlayerBoard(Game.Players[3]);
 
             UpdateCurrentPlayerName();
             UpdateRemaingResourceCounts();
@@ -35,21 +36,21 @@ namespace StoneAge.WinForms
 
         private void UpdateCurrentPlayerName()
         {
-            labelPlayerNameReplaceable.Text = Game.Current.Name;
-            labelPlayerNameReplaceable.ForeColor = Game.Current.Color.ToDrawingColor();
+            //labelPlayerNameReplaceable.Text = Game.Current.Name;
+            //labelPlayerNameReplaceable.ForeColor = Game.Current.Color.ToDrawingColor();
         }
 
         private void UpdateRemaingResourceCounts()
         {
-            labelRemainingWood.Text = Game.Wood.ToString();
-            labelRemainingBrick.Text = Game.Brick.ToString();
-            labelRemainingStone.Text = Game.Stone.ToString();
-            labelRemainingGold.Text = Game.Gold.ToString();
+            //labelRemainingWood.Text = Game.Wood.ToString();
+            //labelRemainingBrick.Text = Game.Brick.ToString();
+            //labelRemainingStone.Text = Game.Stone.ToString();
+            //labelRemainingGold.Text = Game.Gold.ToString();
         }
 
         private void buttonDone_Click(object sender, EventArgs e)
         {
-            Game.Next();
+            //Game.Next();
 
             UpdateCurrentPlayerName();
             playerDisplay1.RefreshControls();

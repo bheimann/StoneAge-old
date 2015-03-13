@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using StoneAge.Core;
+using StoneAge.Core.Models;
 
 namespace StoneAge.WinForms.Controls
 {
@@ -12,7 +13,7 @@ namespace StoneAge.WinForms.Controls
     {
         public BoardSpace Space { get; set; }
 
-        protected GameBoard Game
+        protected Game Game
         {
             get
             {
@@ -24,9 +25,9 @@ namespace StoneAge.WinForms.Controls
         {
             base.OnClick(e);
 
-            Game.TryToOccupySpace(Space);
+            //Game.TryToOccupySpace(Space);
 
-            BackColor = Game.ColorOfSpace(Space).ToDrawingColor(SystemColors.Control);
+            //BackColor = Game.ColorOfSpace(Space).ToDrawingColor(SystemColors.Control);
         }
     }
 }

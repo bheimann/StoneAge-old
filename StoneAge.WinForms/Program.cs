@@ -15,10 +15,10 @@ namespace StoneAge.WinForms
             Application.SetCompatibleTextRenderingDefault(false);
             if (appSettings.ShowSplashScreen)
                 Application.Run(new WelcomeScreenForm());
-            var gameBoard = new Core.GameBoard();
+            var game = new Core.Game();
             if (appSettings.ShowChoosePlayersScreen)
-                Application.Run(new ChoosePlayersForm(gameBoard));
-            Application.Run(new MainForm(gameBoard));
+                Application.Run(new ChoosePlayersForm(game));
+            Application.Run(new MainForm(game));
         }
     }
 }

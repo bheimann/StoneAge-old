@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using StoneAge.Core.Models;
 
-namespace StoneAge.Core.Tests
+namespace StoneAge.Core.Tests.Models
 {
     [TestFixture]
     public class BuildingTileTest
