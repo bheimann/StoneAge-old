@@ -188,7 +188,9 @@ namespace StoneAge.Core
 
         private bool InitialBoardSetup()
         {
+            Phase = GamePhase.SetUpBoard;
             Board = new GameBoard();
+            TurnOrder = new TurnOrder();
 
             AssignPlayerSeats();
             AssignPlayerColors();
@@ -199,7 +201,7 @@ namespace StoneAge.Core
 
             // TODO: "how to solve call back and setting up the board"
             IsThinking = false;
-            Phase = GamePhase.SetUpBoard;
+            Phase = GamePhase.PlayersPlacePeople;
             return true;
         }
 
@@ -217,6 +219,16 @@ namespace StoneAge.Core
                 var chair = freeSeats.ChooseAtRandom();
                 player.Chair = chair;
             }
+
+            foreach (var chair in allChairs)
+                AddTakenChairsToQueue(chair);
+        }
+
+        private void AddTakenChairsToQueue(Chair chair)
+        {
+            var playerInChair = _players.SingleOrDefault(p => p.Chair == chair);
+            if (playerInChair != null)
+                TurnOrder.AddToEnd(playerInChair);
         }
 
         private void AssignPlayerColors()
@@ -245,8 +257,7 @@ namespace StoneAge.Core
                 potentialStartPlayers.ChooseAtRandom() :
                 _players.ChooseAtRandom();
 
-            Cheiftan = player.Chair;
-            Current = player.Chair;
+            TurnOrder.SetCheiftan(player);
         }
 
         private void PassOutPlayerBoards()
@@ -255,17 +266,59 @@ namespace StoneAge.Core
                 player.PlayerBoard = new PlayerBoard();
         }
 
-        private void PrepareNewRound()
+        private bool PrepareNewRound()
         {
-            if(Board.CardSlot1 == null)
-            {
-                // TODO: start here
-            }
-            //  Expose up to top 4 cards
-            //  Expose top hut stacks
-            //  Place chieftain
+            var gameOverSignafied = false;
 
-            throw new NotImplementedException();
+            var cardsForSlots = new Queue<Card>();
+            if (Board.CardSlot1 != null)
+                cardsForSlots.Enqueue(Board.CardSlot1);
+            if (Board.CardSlot2 != null)
+                cardsForSlots.Enqueue(Board.CardSlot2);
+            if (Board.CardSlot3 != null)
+                cardsForSlots.Enqueue(Board.CardSlot3);
+            if (Board.CardSlot4 != null)
+                cardsForSlots.Enqueue(Board.CardSlot4);
+
+            for (int i = cardsForSlots.Count(); i < 4; i++)
+            {
+                if (!Board.CardDeck.Any())
+                {
+                    gameOverSignafied = true;
+                    break;
+                }
+                cardsForSlots.Enqueue(Board.CardDeck.Pop());
+            }
+
+            if(!gameOverSignafied)
+            {
+                Board.CardSlot1 = cardsForSlots.Dequeue();
+                Board.CardSlot2 = cardsForSlots.Dequeue();
+                Board.CardSlot3 = cardsForSlots.Dequeue();
+                Board.CardSlot4 = cardsForSlots.Dequeue();
+            }
+
+            Board.HutStack1.FlipTopCard();
+            Board.HutStack2.FlipTopCard();
+            Board.HutStack3.FlipTopCard();
+            Board.HutStack4.FlipTopCard();
+
+            if (Board.HutStack1.IsEmpty ||
+                Board.HutStack2.IsEmpty ||
+                Board.HutStack3.IsEmpty ||
+                Board.HutStack4.IsEmpty)
+            {
+                return true;
+            }
+
+            TurnOrder.NextCheiftan();
+
+            foreach (var player in _players)
+            {
+                player.PlayerBoard.PeopleToPlace = player.PlayerBoard.TotalPeople;
+            }
+
+            return gameOverSignafied;
         }
 
         public GameResponse RenamePlayer(Guid playerId, string newName)
@@ -304,8 +357,7 @@ namespace StoneAge.Core
             var newName = Player.DefaultPlayerNames.ChooseAtRandom();
             player.Name = newName;
 
-            // should be any time
-            throw new NotImplementedException();
+            return GameResponse.Pass();
         }
 
         public GameResponse ChangePlayerMode(Guid playerId, PlayerMode mode)
@@ -313,20 +365,56 @@ namespace StoneAge.Core
             if (Phase != GamePhase.ChoosePlayers)
                 return GameResponse.Fail();
 
-            throw new NotImplementedException();
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse.Fail();
+
+            player.Mode = mode;
+
+            return GameResponse.Pass();
         }
 
-        public GameResponse PlacePeople(Guid playerId, int quantity, BoardSpace space)
+        public GameResponse PlacePeople(Guid playerId, int quantity, BoardSpace boardSpace)
         {
             if (Phase != GamePhase.PlayersPlacePeople)
                 return GameResponse.Fail();
 
-            throw new NotImplementedException();
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse.Fail();
+
+            var space = Board.Spaces.SingleOrDefault(s => s.BoardSpace == boardSpace);
+            if (space.QuantityIsInvalidForSpace(quantity))
+                return GameResponse.Fail();
+
+            if(space.PlayerPreviouslyPlaced(player))
+                return GameResponse.Fail();
+
+            if(space.NotAvailable(quantity))
+                return GameResponse.Fail();
+
+            if(space.HasTooManyUniquePlayers())
+                return GameResponse.Fail();
+
+            if(!player.PlayerBoard.HasAvailablePeopleToPlace(quantity))
+                return GameResponse.Fail();
+
+            player.PlayerBoard.SetPeopleAsPlaced(quantity);
+            space.Place(player, quantity);
+
+            if (_players.Sum(p => p.PlayerBoard.PeopleToPlace) == 0)
+                Phase = GamePhase.UsePeopleActions;
+
+            return GameResponse.Pass();
         }
 
         public GameResponse CancelLastPlacement(Guid playerId)
         {
             if (Phase != GamePhase.PlayersPlacePeople)
+                return GameResponse.Fail();
+
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
                 return GameResponse.Fail();
 
             // should this be allowed? probably will be a house rule including things like how many times
@@ -338,12 +426,22 @@ namespace StoneAge.Core
             if (Phase != GamePhase.UsePeopleActions)
                 return GameResponse.Fail();
 
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse.Fail();
+
+            // TODO: cannot use action where do not have people
+
             throw new NotImplementedException();
         }
 
         public GameResponse<Card> PayForCard(Guid playerId, IDictionary<Resource, int> resources)
         {
             if (Phase != GamePhase.UsePeopleActions)
+                return GameResponse<Card>.Fail();
+
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
                 return GameResponse<Card>.Fail();
 
             throw new NotImplementedException();
@@ -354,6 +452,10 @@ namespace StoneAge.Core
             if (Phase != GamePhase.UsePeopleActions)
                 return GameResponse<int>.Fail();
 
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse<int>.Fail();
+
             throw new NotImplementedException();
         }
 
@@ -361,7 +463,11 @@ namespace StoneAge.Core
         {
             if (Phase != GamePhase.UsePeopleActions)
                 return GameResponse.Fail();
-            
+
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse.Fail();
+
             throw new NotImplementedException();
         }
 
@@ -370,12 +476,20 @@ namespace StoneAge.Core
             if (Phase != GamePhase.UsePeopleActions)
                 return GameResponse.Fail();
 
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse.Fail();
+
             throw new NotImplementedException();
         }
 
         public GameResponse UseSpecialAction(Guid playerId, SpecialAction action)
         {
             if (Phase != GamePhase.UsePeopleActions && Phase != GamePhase.FeedPeople)
+                return GameResponse.Fail();
+
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
                 return GameResponse.Fail();
 
             // any time, e.g. 2 resource card
@@ -389,18 +503,19 @@ namespace StoneAge.Core
 
         public GameResponse FeedPeople(Guid playerId, IDictionary<Resource, int> otherResourcesToFeedWith)
         {
+            if (Phase != GamePhase.FeedPeople)
+                return GameResponse.Fail();
+
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse.Fail();
+
             throw new NotImplementedException();
         }
 
         public GameResponse<int> CalculateCurrentScore(Guid playerId)
         {
             // should be any time
-            throw new NotImplementedException();
-        }
-
-        public GameResponse ChangePlayerType(Guid playerId, PlayerMode mode)
-        {
-            // type is human, computer, etc
             throw new NotImplementedException();
         }
 
@@ -415,8 +530,51 @@ namespace StoneAge.Core
         //        return _players[_current];
         //    }
         //}
-        private readonly Queue<Chair> ChairQueue = new Queue<Chair>();
-        private Chair Cheiftan = Chair.Standing;
-        private Chair Current = Chair.Standing;
+
+        private TurnOrder TurnOrder;
+    }
+
+    public class TurnOrder
+    {
+        private readonly Queue<Player> _playerQueue = new Queue<Player>();
+
+        private Chair _cheiftanChair = Chair.Standing;
+
+        public void AddToEnd(Player player)
+        {
+            if (_playerQueue.Contains(player))
+                throw new Exception("Cannot add the same player more than once");
+
+            _playerQueue.Enqueue(player);
+        }
+
+        public Player Next()
+        {
+            var moveToBack = _playerQueue.Dequeue();
+            _playerQueue.Enqueue(moveToBack);
+
+            return Current();
+        }
+
+        public Player Current()
+        {
+            return _playerQueue.Peek();
+        }
+
+        public void SetCheiftan(Player player)
+        {
+            _cheiftanChair = player.Chair;
+            while (player.Chair != Next().Chair)
+                ;
+        }
+
+        public void NextCheiftan()
+        {
+            if (_cheiftanChair == Chair.Standing)
+                return;
+            while (_cheiftanChair != Next().Chair)
+                ;
+            _cheiftanChair = Next().Chair;
+        }
     }
 }

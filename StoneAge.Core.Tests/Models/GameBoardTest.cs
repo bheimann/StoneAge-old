@@ -14,10 +14,10 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.AreEqual(36, board.CardDeck.Count);
 
-            Assert.AreEqual(7, board.HutStack1.Count);
-            Assert.AreEqual(7, board.HutStack2.Count);
-            Assert.AreEqual(7, board.HutStack3.Count);
-            Assert.AreEqual(7, board.HutStack4.Count);
+            Assert.AreEqual(7, board.HutStack1.Remaining);
+            Assert.AreEqual(7, board.HutStack2.Remaining);
+            Assert.AreEqual(7, board.HutStack3.Remaining);
+            Assert.AreEqual(7, board.HutStack4.Remaining);
 
             Assert.AreEqual(20, board.WoodAvailable);
             Assert.AreEqual(16, board.BrickAvailable);

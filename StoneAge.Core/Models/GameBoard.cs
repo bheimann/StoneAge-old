@@ -27,12 +27,12 @@ namespace StoneAge.Core.Models
         public Card CardSlot3;
         public Card CardSlot4;
 
-        public readonly Stack<BuildingTile> HutStack1;
-        public readonly Stack<BuildingTile> HutStack2;
-        public readonly Stack<BuildingTile> HutStack3;
-        public readonly Stack<BuildingTile> HutStack4;
+        public readonly HutStack HutStack1;
+        public readonly HutStack HutStack2;
+        public readonly HutStack HutStack3;
+        public readonly HutStack HutStack4;
 
-        //public Dictionary<BoardSpace, Space> Spaces = new Dictionary<BoardSpace, Space>();
+        public IList<Space> Spaces;
 
         public GameBoard()
         {
@@ -45,26 +45,39 @@ namespace StoneAge.Core.Models
 
             var shuffledBuildingHutTiles = new List<BuildingTile>(BuildingTile.All.Shuffle());
 
-            HutStack1 = new Stack<BuildingTile>(shuffledBuildingHutTiles.Skip(0).Take(7));
-            HutStack2 = new Stack<BuildingTile>(shuffledBuildingHutTiles.Skip(7).Take(7));
-            HutStack3 = new Stack<BuildingTile>(shuffledBuildingHutTiles.Skip(14).Take(7));
-            HutStack4 = new Stack<BuildingTile>(shuffledBuildingHutTiles.Skip(21).Take(7));
+            HutStack1 = new HutStack(shuffledBuildingHutTiles.Skip(0).Take(7));
+            HutStack2 = new HutStack(shuffledBuildingHutTiles.Skip(7).Take(7));
+            HutStack3 = new HutStack(shuffledBuildingHutTiles.Skip(14).Take(7));
+            HutStack4 = new HutStack(shuffledBuildingHutTiles.Skip(21).Take(7));
 
             Tool1or2Available = TOTAL_1_2_TOOLS;
             Tool3or4Available = TOTAL_3_4_TOOLS;
 
-            //AddDefaultSpaces();
+            AddDefaultSpaces();
         }
 
-        //private void AddDefaultSpaces()
-        //{
-        //    var boardSpaces = System.Enum.GetValues(typeof(BoardSpace)).Cast<BoardSpace>().Where(bs => bs != BoardSpace.HuntingGrounds);
-
-        //    foreach (var boardSpace in boardSpaces)
-        //    {
-        //        Spaces.Add(boardSpace, new Space());
-        //    }
-        //}
+        private void AddDefaultSpaces()
+        {
+            Spaces = new List<Space>
+            {
+                new Space(BoardSpace.HuntingGrounds, maxQuantity: 40),
+                //new Space(BoardSpace.Forest, maxQuantity: 7),
+                //new Space(BoardSpace.ClayPit, maxQuantity: 7),
+                //new Space(BoardSpace.Quarry, maxQuantity: 7),
+                //new Space(BoardSpace.River, maxQuantity: 7),
+                new Space(BoardSpace.ToolMaker, maxQuantity: 1),
+                new Space(BoardSpace.Hut, 2, 2),
+                new Space(BoardSpace.Field, maxQuantity: 1),
+                new Space(BoardSpace.CivilizationCardSlot1, maxQuantity: 1),
+                new Space(BoardSpace.CivilizationCardSlot2, maxQuantity: 1),
+                new Space(BoardSpace.CivilizationCardSlot3, maxQuantity: 1),
+                new Space(BoardSpace.CivilizationCardSlot4, maxQuantity: 1),
+                new Space(BoardSpace.BuildingTileSlot1, maxQuantity: 1),
+                new Space(BoardSpace.BuildingTileSlot2, maxQuantity: 1),
+                new Space(BoardSpace.BuildingTileSlot3, maxQuantity: 1),
+                new Space(BoardSpace.BuildingTileSlot4, maxQuantity: 1),
+            };
+        }
 
         //public void Next()
         //{
@@ -102,12 +115,118 @@ namespace StoneAge.Core.Models
         //    return Spaces[Space].ThinkingOf;
         //}
     }
-    
-    //public class Space
-    //{
-    //    public PlayerColor? HeldBy;
-    //    public PlayerColor? ThinkingOf;
-    //}
+
+    public class HutStack
+    {
+        private readonly Stack<BuildingTile> _stack;
+
+        public bool HasTopFlipped { get; private set; }
+
+        public HutStack(IEnumerable<BuildingTile> buildingTiles)
+        {
+            _stack = new Stack<BuildingTile>(buildingTiles);
+        }
+
+        public void FlipTopCard()
+        {
+            HasTopFlipped = true;
+        }
+
+        public BuildingTile Top()
+        {
+            if (HasTopFlipped)
+                return _stack.Peek();
+            // TODO: should this throw an exception?
+            return null;
+        }
+
+        public BuildingTile TakeTop()
+        {
+            if (HasTopFlipped)
+                return _stack.Pop();
+            // TODO: should this throw an exception?
+            return null;
+        }
+
+        public int Remaining
+        {
+            get
+            {
+                return _stack.Count();
+            }
+        }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return !_stack.Any();
+            }
+        }
+    }
+
+    public class Space
+    {
+        public readonly BoardSpace BoardSpace;
+        public readonly int MinQuantity;
+        public readonly int MaxQuantity;
+
+        private Dictionary<PlayerColor, int> _quantitiesPerColor = new Dictionary<PlayerColor, int>();
+
+        public Space(BoardSpace boardSpace, int minQuantity = 1, int maxQuantity = 10)
+        {
+            BoardSpace = boardSpace;
+            MinQuantity = minQuantity;
+            MaxQuantity = maxQuantity;
+            _quantitiesPerColor = new Dictionary<PlayerColor, int>();
+        }
+        
+        public bool QuantityIsInvalidForSpace(int quantity)
+        {
+            if (quantity < MinQuantity || quantity > MaxQuantity)
+                return true;
+
+            if (BoardSpace == BoardSpace.Hut && quantity != 2)
+                return true;
+
+            return false;
+        }
+
+        public bool PlayerPreviouslyPlaced(Player player)
+        {
+            if (!_quantitiesPerColor.ContainsKey(player.Color))
+                _quantitiesPerColor.Add(player.Color, 0);
+
+            if (_quantitiesPerColor[player.Color] > 0)
+                return true;
+
+            return false;
+        }
+
+        public bool NotAvailable(int quantity)
+        {
+            if (_quantitiesPerColor.Values.Sum() + quantity > MaxQuantity)
+                return true;
+
+            return false;
+        }
+
+        public bool HasTooManyUniquePlayers()
+        {
+            // TODO: force number of unique player limit to space
+            // TODO: is there a limit in hunting grounds?
+
+            return false;
+        }
+
+        public void Place(Player player, int quantity)
+        {
+            if (!_quantitiesPerColor.ContainsKey(player.Color))
+                _quantitiesPerColor.Add(player.Color, quantity);
+
+            _quantitiesPerColor[player.Color] += quantity;
+        }
+    }
 
 //53 food counters (worth 198)
 //  16 x 1 value (16)

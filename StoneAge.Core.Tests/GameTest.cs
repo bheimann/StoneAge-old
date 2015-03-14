@@ -7,25 +7,57 @@ using System.Threading;
 
 namespace StoneAge.Core.Tests.Models
 {
+    public abstract class GameTestBase
+    {
+        protected Game game;
+
+        protected Guid player1;
+        protected Guid player2;
+        
+        [SetUp]
+        public void Setup()
+        {
+            game = new Game();
+        }
+
+        protected void SetUpStandard2PlayerGame()
+        {
+            player1 = game.AddPlayer().Value;
+            player2 = game.AddPlayer().Value;
+            game.RequestStartPlayer(player1);
+            game.MarkPlayerAsReadyToStart(player1);
+            game.MarkPlayerAsReadyToStart(player2);
+            WaitForBoardSetupToComplete();
+            Assert.AreEqual(GamePhase.PlayersPlacePeople, game.Phase);
+        }
+
+        protected void WaitForBoardSetupToComplete()
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                if (!game.IsThinking)
+                    break;
+                Thread.Sleep(10);
+            }
+        }
+    }
+
     [TestFixture]
-    public class GameTest
+    public class GameTest : GameTestBase
     {
         [Test]
         public void Starting_Phase_is_ChoosePlayers()
         {
-            var game = new Game();
-
             Assert.AreEqual(GamePhase.ChoosePlayers, game.Phase);
         }
     }
 
     [TestFixture]
-    public class GameTest_AddPlayer
+    public class GameTest_AddPlayer : GameTestBase
     {
         [Test]
         public void Can_add_Player_in_ChoosePlayers_Phase()
         {
-            var game = new Game();
             game.Phase = GamePhase.ChoosePlayers;
 
             var result = game.AddPlayer();
@@ -43,7 +75,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_add_Player_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             game.Phase = phase;
 
             var result = game.AddPlayer();
@@ -55,8 +86,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_add_up_to_4_Players()
         {
-            var game = new Game();
-
             var result1 = game.AddPlayer();
             var result2 = game.AddPlayer();
             var result3 = game.AddPlayer();
@@ -71,8 +100,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_add_5_Players()
         {
-            var game = new Game();
-
             var result1 = game.AddPlayer();
             var result2 = game.AddPlayer();
             var result3 = game.AddPlayer();
@@ -89,12 +116,11 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_RemovePlayer
+    public class GameTest_RemovePlayer : GameTestBase
     {
         [Test]
         public void Can_remove_Player_in_ChoosePlayers_Phase()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = GamePhase.ChoosePlayers;
 
@@ -112,7 +138,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_remove_Player_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -124,8 +149,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_remove_all_4_Players_in_any_order()
         {
-            var game = new Game();
-
             var ids = new List<Guid>();
             var player1 = game.AddPlayer().Value;
             ids.Add(player1);
@@ -147,8 +170,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_remove_a_non_existent_player()
         {
-            var game = new Game();
-
             var result = game.RemovePlayer(Guid.NewGuid());
 
             Assert.IsFalse(result.Successful);
@@ -157,7 +178,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_remove_the_same_player_more_than_once()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result1 = game.RemovePlayer(playerId);
@@ -169,12 +189,11 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_RequestStartPlayer
+    public class GameTest_RequestStartPlayer : GameTestBase
     {
         [Test]
         public void Can_request_start_Player_in_ChoosePlayers_Phase()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = GamePhase.ChoosePlayers;
 
@@ -192,7 +211,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_request_start_Player_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -204,8 +222,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_request_start_Player_for_a_non_existent_player()
         {
-            var game = new Game();
-
             var result = game.RequestStartPlayer(Guid.NewGuid());
 
             Assert.IsFalse(result.Successful);
@@ -214,7 +230,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_request_start_Player_for_the_same_player_more_than_once()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result1 = game.RequestStartPlayer(playerId);
@@ -226,12 +241,11 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_DeclineStartPlayer
+    public class GameTest_DeclineStartPlayer : GameTestBase
     {
         [Test]
         public void Can_decline_start_Player_in_ChoosePlayers_Phase()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = GamePhase.ChoosePlayers;
             game.RequestStartPlayer(playerId);
@@ -250,7 +264,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_decline_start_Player_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
             game.RequestStartPlayer(playerId);
@@ -263,8 +276,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_decline_start_Player_for_a_non_existent_player()
         {
-            var game = new Game();
-
             var result = game.DeclineStartPlayer(Guid.NewGuid());
 
             Assert.IsFalse(result.Successful);
@@ -273,7 +284,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_decline_start_Player_for_the_same_player_more_than_once()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.RequestStartPlayer(playerId);
 
@@ -287,7 +297,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_decline_start_Player_for_Player_that_has_not_requested_to_be_start_player()
         {
-            var game = new Game();
             var playerId1 = game.AddPlayer().Value;
             var playerId2 = game.AddPlayer().Value;
             game.RequestStartPlayer(playerId2);
@@ -301,12 +310,11 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_ClaimPlayerColor
+    public class GameTest_ClaimPlayerColor : GameTestBase
     {
         [Test]
         public void Can_claim_PlayerColor_in_ChoosePlayers_Phase()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = GamePhase.ChoosePlayers;
 
@@ -324,7 +332,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_claim_PlayerColor_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -336,8 +343,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_claim_PlayerColor_for_a_non_existent_player()
         {
-            var game = new Game();
-
             var result = game.ClaimPlayerColor(Guid.NewGuid(), PlayerColor.Red);
 
             Assert.IsFalse(result.Successful);
@@ -346,7 +351,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_claim_the_same_PlayerColor_for_the_same_player_more_than_once()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result1 = game.ClaimPlayerColor(playerId, PlayerColor.Red);
@@ -359,7 +363,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_claim_PlayerColor_as_long_as_switching()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result1 = game.ClaimPlayerColor(playerId, PlayerColor.Blue);
@@ -374,7 +377,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_claim_previously_claimed_PlayerColor_as_long_as_switching()
         {
-            var game = new Game();
             var player1 = game.AddPlayer().Value;
             var player2 = game.AddPlayer().Value;
 
@@ -394,7 +396,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_claim_NotChosenYet_by_multiple_players()
         {
-            var game = new Game();
             var player1 = game.AddPlayer().Value;
             var player2 = game.AddPlayer().Value;
             var player3 = game.AddPlayer().Value;
@@ -421,12 +422,11 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_SetPlayerSeat
+    public class GameTest_SetPlayerSeat : GameTestBase
     {
         [Test]
         public void Can_set_Player_seat_in_ChoosePlayers_Phase()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = GamePhase.ChoosePlayers;
 
@@ -444,7 +444,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_set_Player_seat_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -456,8 +455,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_set_Player_seat_for_a_non_existent_player()
         {
-            var game = new Game();
-
             var result = game.SetPlayerSeat(Guid.NewGuid(), Chair.North);
 
             Assert.IsFalse(result.Successful);
@@ -466,7 +463,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_set_the_same_Player_seat_for_the_same_player_more_than_once()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result1 = game.SetPlayerSeat(playerId, Chair.North);
@@ -479,7 +475,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_set_Player_seat_as_long_as_not_selecting_seat_already_in()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result1 = game.SetPlayerSeat(playerId, Chair.North);
@@ -494,7 +489,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_sit_at_previously_set_Player_seat_as_long_as_switching()
         {
-            var game = new Game();
             var player1 = game.AddPlayer().Value;
             var player2 = game.AddPlayer().Value;
 
@@ -514,7 +508,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_set_to_Standing_by_multiple_players()
         {
-            var game = new Game();
             var player1 = game.AddPlayer().Value;
             var player2 = game.AddPlayer().Value;
             var player3 = game.AddPlayer().Value;
@@ -541,12 +534,11 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_MarkPlayerAsReadyToStart
+    public class GameTest_MarkPlayerAsReadyToStart : GameTestBase
     {
         [Test]
         public void Can_mark_Player_ready_to_start_in_ChoosePlayers_Phase()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = GamePhase.ChoosePlayers;
 
@@ -564,7 +556,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_mark_Player_ready_to_start_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -576,8 +567,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_mark_Player_ready_to_start_for_a_non_existent_player()
         {
-            var game = new Game();
-
             var result = game.MarkPlayerAsReadyToStart(Guid.NewGuid());
 
             Assert.IsFalse(result.Successful);
@@ -586,7 +575,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_mark_the_same_Player_ready_to_start_more_than_once()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result1 = game.MarkPlayerAsReadyToStart(playerId);
@@ -599,7 +587,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Marking_all_Players_ready_will_advance_for_2_or_more_total()
         {
-            var game = new Game();
             var player1 = game.AddPlayer().Value;
 
             Assert.AreEqual(GamePhase.ChoosePlayers, game.Phase);
@@ -608,28 +595,22 @@ namespace StoneAge.Core.Tests.Models
 
             var player2 = game.AddPlayer().Value;
             var result2 = game.MarkPlayerAsReadyToStart(player2);
-
-            for (int i = 0; i < 10; i++)
-            {
-                if(!game.IsThinking)
-                    break;
-                Thread.Sleep(1000);
-            }
+            WaitForBoardSetupToComplete();
 
             Assert.AreNotEqual(GamePhase.ChoosePlayers, game.Phase);
+            Assert.AreEqual(GamePhase.PlayersPlacePeople, game.Phase);
             Assert.IsFalse(game.ClaimPlayerColor(player1, PlayerColor.NotChosenYet).Successful);
         }
     }
 
     [TestFixture]
-    public class GameTest_RenamePlayer
+    public class GameTest_RenamePlayer : GameTestBase
     {
         // TODO: should this be an anytime setting? should this be a house rule?
 
         [TestCase(GamePhase.ChoosePlayers)]
         public void Can_rename_Player_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -647,7 +628,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_rename_Player_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -659,7 +639,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_rename_any_Player_in_any_order()
         {
-            var game = new Game();
             var player1 = game.AddPlayer().Value;
             var player2 = game.AddPlayer().Value;
 
@@ -671,8 +650,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_rename_a_non_existent_player()
         {
-            var game = new Game();
-
             var result = game.RenamePlayer(Guid.NewGuid(), "Billy Bob Roberts");
 
             Assert.IsFalse(result.Successful);
@@ -681,7 +658,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_rename_a_removed_player()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.RemovePlayer(playerId);
 
@@ -693,8 +669,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_rename_the_same_player_more_than_once()
         {
-            var game = new Game();
-
             var playerId = game.AddPlayer().Value;
 
             var result1 = game.RenamePlayer(playerId, "Marco Polo");
@@ -707,7 +681,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_rename_Player_to_null()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result = game.RenamePlayer(playerId, null);
@@ -718,7 +691,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_rename_Player_to_EmptyString()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result = game.RenamePlayer(playerId, string.Empty);
@@ -729,7 +701,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_rename_Player_to_all_spaces()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result = game.RenamePlayer(playerId, "  \t  \t  \t  ");
@@ -740,7 +711,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_rename_Player_with_newline_or_carriage_return()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
 
             var result = game.RenamePlayer(playerId, "\nDarth Vader\r");
@@ -751,7 +721,6 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_rename_Player_up_to_100_characters()
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             var longName = new string('c', 100);
             var longerName = new string('c', 101);
@@ -765,14 +734,13 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_GivePlayerRandomName
+    public class GameTest_GivePlayerRandomName : GameTestBase
     {
         // TODO: should this be an anytime setting? should this be a house rule?
 
         [TestCase(GamePhase.ChoosePlayers)]
         public void Can_give_random_name_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -790,7 +758,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_give_random_name_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -798,17 +765,24 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [Test]
+        public void Cannot_give_random_name_to_a_non_existent_player()
+        {
+            var result = game.GivePlayerRandomName(Guid.NewGuid());
+
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
-    public class GameTest_ChangePlayerMode
+    public class GameTest_ChangePlayerMode : GameTestBase
     {
         // TODO: should this be an anytime setting? should this be a house rule?
 
         [TestCase(GamePhase.ChoosePlayers)]
         public void Can_change_PlayerMode_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -826,7 +800,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_change_PlayerMode_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -834,21 +807,23 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [Test]
+        public void Cannot_change_PlayerMode_for_a_non_existent_player()
+        {
+            var result = game.ChangePlayerMode(Guid.NewGuid(), PlayerMode.ComputerStrategyGreedyBlock);
+
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
-    public class GameTest_PlacePeople
+    public class GameTest_PlacePeople : GameTestBase
     {
         [Test]
         public void Can_place_people_in_PlayersPlacePeople_Phase()
         {
-            var game = new Game();
-            var player1 = game.AddPlayer().Value;
-            var player2 = game.AddPlayer().Value;
-            game.RequestStartPlayer(player1);
-            game.MarkPlayerAsReadyToStart(player1);
-            game.MarkPlayerAsReadyToStart(player2);
-            Assert.AreEqual(GamePhase.PlayersPlacePeople, game.Phase);
+            SetUpStandard2PlayerGame();
 
             var result = game.PlacePeople(player1, 1, BoardSpace.HuntingGrounds);
 
@@ -864,7 +839,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_place_people_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -872,22 +846,77 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [Test]
+        public void Cannot_place_people_for_a_non_existent_player()
+        {
+            SetUpStandard2PlayerGame();
+
+            var result = game.PlacePeople(Guid.NewGuid(), 1, BoardSpace.HuntingGrounds);
+
+            Assert.IsFalse(result.Successful);
+        }
+
+        [TestCase(1, false)]
+        [TestCase(2, true)]
+        [TestCase(3, false)]
+        public void Must_place_2_people_in_Hut(int peopleCount, bool expected)
+        {
+            SetUpStandard2PlayerGame();
+
+            var result = game.PlacePeople(player1, peopleCount, BoardSpace.Hut);
+
+            Assert.AreEqual(expected, result.Successful);
+        }
+
+        [TestCase(BoardSpace.ToolMaker)]
+        [TestCase(BoardSpace.Field)]
+        [TestCase(BoardSpace.CivilizationCardSlot1)]
+        [TestCase(BoardSpace.CivilizationCardSlot2)]
+        [TestCase(BoardSpace.CivilizationCardSlot3)]
+        [TestCase(BoardSpace.CivilizationCardSlot4)]
+        [TestCase(BoardSpace.BuildingTileSlot1)]
+        [TestCase(BoardSpace.BuildingTileSlot2)]
+        [TestCase(BoardSpace.BuildingTileSlot3)]
+        [TestCase(BoardSpace.BuildingTileSlot4)]
+        public void Can_only_place_1_person_in_locations(BoardSpace space)
+        {
+            SetUpStandard2PlayerGame();
+
+            var result = game.PlacePeople(player1, 1, space);
+
+            Assert.IsTrue(result.Successful);
+        }
+
+        [TestCase(BoardSpace.ToolMaker)]
+        [TestCase(BoardSpace.Field)]
+        [TestCase(BoardSpace.CivilizationCardSlot1)]
+        [TestCase(BoardSpace.CivilizationCardSlot2)]
+        [TestCase(BoardSpace.CivilizationCardSlot3)]
+        [TestCase(BoardSpace.CivilizationCardSlot4)]
+        [TestCase(BoardSpace.BuildingTileSlot1)]
+        [TestCase(BoardSpace.BuildingTileSlot2)]
+        [TestCase(BoardSpace.BuildingTileSlot3)]
+        [TestCase(BoardSpace.BuildingTileSlot4)]
+        public void Cannot_place_2_people_in_locations(BoardSpace space)
+        {
+            SetUpStandard2PlayerGame();
+
+            var result = game.PlacePeople(player1, 2, space);
+
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
-    public class GameTest_CancelLastPlacement
+    public class GameTest_CancelLastPlacement : GameTestBase
     {
         // TODO: this will be very house rule specific, cannot go back more than x action and cannot go back if y players have done anything
 
         [Test]
         public void Can_cancel_last_placement_in_PlayersPlacePeople_Phase()
         {
-            var game = new Game();
-            var player1 = game.AddPlayer().Value;
-            var player2 = game.AddPlayer().Value;
-            game.RequestStartPlayer(player1);
-            game.MarkPlayerAsReadyToStart(player1);
-            game.MarkPlayerAsReadyToStart(player2);
+            SetUpStandard2PlayerGame();
             game.PlacePeople(player1, 1, BoardSpace.HuntingGrounds);
             Assert.AreEqual(GamePhase.PlayersPlacePeople, game.Phase);
 
@@ -905,7 +934,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_cancel_last_placement_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -916,17 +944,12 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_UseActionOfPeople
+    public class GameTest_UseActionOfPeople : GameTestBase
     {
         [Test]
         public void Can_use_people_action_in_UsePeopleActions_Phase()
         {
-            var game = new Game();
-            var player1 = game.AddPlayer().Value;
-            var player2 = game.AddPlayer().Value;
-            game.RequestStartPlayer(player1);
-            game.MarkPlayerAsReadyToStart(player1);
-            game.MarkPlayerAsReadyToStart(player2);
+            SetUpStandard2PlayerGame();
             game.PlacePeople(player1, 5, BoardSpace.HuntingGrounds);
             game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
             Assert.AreEqual(GamePhase.UsePeopleActions, game.Phase);
@@ -945,7 +968,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_place_people_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -956,17 +978,12 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_PayForCard
+    public class GameTest_PayForCard : GameTestBase
     {
         [Test]
         public void Can_pay_for_card_in_UsePeopleActions_Phase()
         {
-            var game = new Game();
-            var player1 = game.AddPlayer().Value;
-            var player2 = game.AddPlayer().Value;
-            game.RequestStartPlayer(player1);
-            game.MarkPlayerAsReadyToStart(player1);
-            game.MarkPlayerAsReadyToStart(player2);
+            SetUpStandard2PlayerGame();
             game.PlacePeople(player1, 1, BoardSpace.CivilizationCardSlot1);
             game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
             game.PlacePeople(player1, 4, BoardSpace.Forest);
@@ -986,7 +1003,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_pay_for_card_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -997,18 +1013,13 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_PayForHutTile
+    public class GameTest_PayForHutTile : GameTestBase
     {
         // TODO: inject the ability to change the huts
         [Test]
         public void Can_pay_for_hut_tile_in_UsePeopleActions_Phase()
         {
-            var game = new Game();
-            var player1 = game.AddPlayer().Value;
-            var player2 = game.AddPlayer().Value;
-            game.RequestStartPlayer(player1);
-            game.MarkPlayerAsReadyToStart(player1);
-            game.MarkPlayerAsReadyToStart(player2);
+            SetUpStandard2PlayerGame();
             game.PlacePeople(player1, 1, BoardSpace.BuildingTileSlot1);
             game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
             game.PlacePeople(player1, 4, BoardSpace.Forest);
@@ -1028,7 +1039,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_pay_for_hut_tile_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -1039,17 +1049,13 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_ClaimLotteryResult
+    public class GameTest_ClaimLotteryResult : GameTestBase
     {
+        // TODO: potentially inject the deck of cards to make this easier to test
         [Test]
         public void Can_claim_lottery_result_in_UsePeopleActions_Phase()
         {
-            var game = new Game();
-            var player1 = game.AddPlayer().Value;
-            var player2 = game.AddPlayer().Value;
-            game.RequestStartPlayer(player1);
-            game.MarkPlayerAsReadyToStart(player1);
-            game.MarkPlayerAsReadyToStart(player2);
+            SetUpStandard2PlayerGame();
             Card card;
             do
             {
@@ -1087,7 +1093,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_claim_lottery_result_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -1098,17 +1103,12 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_TapTool
+    public class GameTest_TapTool : GameTestBase
     {
         [Test]
         public void Can_tap_tool_in_UsePeopleActions_Phase()
         {
-            var game = new Game();
-            var player1 = game.AddPlayer().Value;
-            var player2 = game.AddPlayer().Value;
-            game.RequestStartPlayer(player1);
-            game.MarkPlayerAsReadyToStart(player1);
-            game.MarkPlayerAsReadyToStart(player2);
+            SetUpStandard2PlayerGame();
             game.PlacePeople(player1, 1, BoardSpace.ToolMaker);
             game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
             game.PlacePeople(player1, 4, BoardSpace.Forest);
@@ -1129,7 +1129,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_tap_tool_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
@@ -1140,18 +1139,13 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    public class GameTest_UseSpecialAction
+    public class GameTest_UseSpecialAction : GameTestBase
     {
         // TODO: potentially inject the deck of cards to make this easier to test
         [Test]
         public void Can_use_special_action_in_UsePeopleActions_Phase()
         {
-            var game = new Game();
-            var player1 = game.AddPlayer().Value;
-            var player2 = game.AddPlayer().Value;
-            game.RequestStartPlayer(player1);
-            game.MarkPlayerAsReadyToStart(player1);
-            game.MarkPlayerAsReadyToStart(player2);
+            SetUpStandard2PlayerGame();
             for (int i = 0; i < 5; i++)
             {
                 game.PlacePeople(player1, 1, BoardSpace.Field);
@@ -1204,12 +1198,12 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_use_special_action_in_FeedPeople_Phase()
         {
-            var game = new Game();
             var player1 = game.AddPlayer().Value;
             var player2 = game.AddPlayer().Value;
             game.RequestStartPlayer(player1);
             game.MarkPlayerAsReadyToStart(player1);
             game.MarkPlayerAsReadyToStart(player2);
+            WaitForBoardSetupToComplete();
             for (int i = 0; i < 5; i++)
             {
                 game.PlacePeople(player1, 1, BoardSpace.Field);
@@ -1269,7 +1263,6 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.FinalScoring)]
         public void Cannot_use_special_action_in_Phase(GamePhase phase)
         {
-            var game = new Game();
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 

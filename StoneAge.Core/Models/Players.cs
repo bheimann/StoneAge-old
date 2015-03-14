@@ -5,13 +5,14 @@ using System.Text;
 
 namespace StoneAge.Core.Models
 {
-    [System.Diagnostics.DebuggerDisplay("{Name} {Color} {Chair}")]
+    [System.Diagnostics.DebuggerDisplay("{Name} ({Mode}) {Color} {Chair}")]
     public class Player
     {
         public const int MAX_NAME_LENGTH = 100;
 
         public Guid Id;
         public string Name;
+        public PlayerMode Mode;
         public PlayerColor Color;
         public Chair Chair;
         public PlayerBoard PlayerBoard;
@@ -51,7 +52,8 @@ namespace StoneAge.Core.Models
     {
         public int Food;
         public readonly IDictionary<Resource, int> Resources = new Dictionary<Resource, int>();
-        public int People;
+        public int TotalPeople;
+        public int PeopleToPlace;
         public readonly Tool[] Tools = new Tool[3];
         public int FoodTrack;
         public int Score;
@@ -59,7 +61,8 @@ namespace StoneAge.Core.Models
 
         public PlayerBoard()
         {
-            People = STARTING_PEOPLE_COUNT;
+            TotalPeople = STARTING_PEOPLE_COUNT;
+            PeopleToPlace = TotalPeople;
 
             Food = STARTING_FOOD_COUNT;
 
@@ -74,6 +77,16 @@ namespace StoneAge.Core.Models
 
             FoodTrack = STARTING_FOOD_TRACK;
             Score = STARTING_SCORE;
+        }
+
+        public bool HasAvailablePeopleToPlace(int quantity)
+        {
+            return PeopleToPlace >= quantity;
+        }
+
+        public void SetPeopleAsPlaced(int quantity)
+        {
+            PeopleToPlace -= quantity;
         }
 
         private const int STARTING_PEOPLE_COUNT = 5;

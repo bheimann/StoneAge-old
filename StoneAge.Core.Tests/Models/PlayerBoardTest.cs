@@ -12,7 +12,7 @@ namespace StoneAge.Core.Tests.Models
             var board = new PlayerBoard();
 
             Assert.AreEqual(12, board.Food);
-            Assert.AreEqual(5, board.People);
+            Assert.AreEqual(5, board.TotalPeople);
 
             Assert.AreEqual(0, board.Resources[Resource.Wood]);
             Assert.AreEqual(0, board.Resources[Resource.Brick]);
