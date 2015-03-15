@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using StoneAge.Core.Models;
+using StoneAge.Core.Models.Cards;
 using System.Linq;
 
 namespace StoneAge.Core.Tests.Models

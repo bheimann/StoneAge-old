@@ -50,16 +50,4 @@ namespace StoneAge.Core.Models
             Successful = success;
         }
     }
-
-    public enum GamePhase
-    {
-        ChoosePlayers,
-        SetUpBoard,
-        PlayersPlacePeople,
-        UsePeopleActions,
-        FeedPeople,
-        CheckIfEndGame,
-        NewRoundPrep,
-        FinalScoring,
-    }
 }

@@ -4,6 +4,9 @@ using StoneAge.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using StoneAge.Core.Models.Players;
+using StoneAge.Core.Models.Cards;
+using StoneAge.Core.Models.Tools;
 
 namespace StoneAge.Core.Tests.Models
 {
@@ -857,6 +860,31 @@ namespace StoneAge.Core.Tests.Models
             Assert.IsFalse(result.Successful);
         }
 
+        [Test]
+        public void Cannot_place_more_People_that_player_has()
+        {
+            SetUpStandard2PlayerGame();
+
+            var result = game.PlacePeople(Guid.NewGuid(), 10, BoardSpace.HuntingGrounds);
+
+            Assert.IsFalse(result.Successful);
+        }
+
+        [Test]
+        public void Cannot_place_0_People_anywhere()
+        {
+            SetUpStandard2PlayerGame();
+
+            var boardSpaces = Enum.GetValues(typeof(BoardSpace)).Cast<BoardSpace>();
+
+            foreach (var boardSpace in boardSpaces)
+            {
+                var result = game.PlacePeople(Guid.NewGuid(), 0, boardSpace);
+
+                Assert.IsFalse(result.Successful);
+            }
+        }
+
         [TestCase(1, false)]
         [TestCase(2, true)]
         [TestCase(3, false)]
@@ -906,9 +934,48 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [TestCase(BoardSpace.Forest)]
+        [TestCase(BoardSpace.ClayPit)]
+        [TestCase(BoardSpace.Quarry)]
+        [TestCase(BoardSpace.River)]
+        public void Can_place_7_people_in_locations(BoardSpace space)
+        {
+            SetUpStandard2PlayerGame();
+            // TODO: revisit once the ability to perform Hut actions and feed work
+
+            var result = game.PlacePeople(player1, 7, space);
+
+            Assert.IsTrue(result.Successful);
+        }
+
+        [Test]
+        public void Can_place_10_people_in_HuntingGrounds()
+        {
+            SetUpStandard2PlayerGame();
+            // TODO: revisit once the ability to perform Hut actions and feed work
+
+            var result = game.PlacePeople(player1, 10, BoardSpace.HuntingGrounds);
+
+            Assert.IsTrue(result.Successful);
+        }
+
+        [TestCase(BoardSpace.Forest)]
+        [TestCase(BoardSpace.ClayPit)]
+        [TestCase(BoardSpace.Quarry)]
+        [TestCase(BoardSpace.River)]
+        public void Cannot_place_8_people_in_locations(BoardSpace space)
+        {
+            SetUpStandard2PlayerGame();
+
+            var result = game.PlacePeople(player1, 8, space);
+
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
+    [Ignore]
     public class GameTest_CancelLastPlacement : GameTestBase
     {
         // TODO: this will be very house rule specific, cannot go back more than x action and cannot go back if y players have done anything
@@ -941,12 +1008,24 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [Test]
+        public void Cannot_cancel_last_placement_for_a_non_existent_player()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 1, BoardSpace.HuntingGrounds);
+
+            var result = game.CancelLastPlacement(Guid.NewGuid());
+
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
     public class GameTest_UseActionOfPeople : GameTestBase
     {
         [Test]
+        [Ignore]
         public void Can_use_people_action_in_UsePeopleActions_Phase()
         {
             SetUpStandard2PlayerGame();
@@ -966,7 +1045,7 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.CheckIfEndGame)]
         [TestCase(GamePhase.NewRoundPrep)]
         [TestCase(GamePhase.FinalScoring)]
-        public void Cannot_place_people_in_Phase(GamePhase phase)
+        public void Cannot_use_people_action_in_Phase(GamePhase phase)
         {
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
@@ -975,9 +1054,22 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [Test]
+        public void Cannot_use_people_action_for_a_non_existent_player()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+
+            var result = game.UseActionOfPeople(Guid.NewGuid(), BoardSpace.HuntingGrounds);
+
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
+    [Ignore]
     public class GameTest_PayForCard : GameTestBase
     {
         [Test]
@@ -1010,9 +1102,24 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [Test]
+        public void Cannot_pay_for_card_for_a_non_existent_player()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 1, BoardSpace.CivilizationCardSlot1);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 4, BoardSpace.Forest);
+            Assert.AreEqual(GamePhase.UsePeopleActions, game.Phase);
+
+            var result = game.PayForCard(Guid.NewGuid(), new Dictionary<Resource, int> { { Resource.Wood, 1 } });
+            
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
+    [Ignore]
     public class GameTest_PayForHutTile : GameTestBase
     {
         // TODO: inject the ability to change the huts
@@ -1046,9 +1153,24 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [Test]
+        public void Cannot_pay_for_hut_tile_for_a_non_existent_player()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 1, BoardSpace.BuildingTileSlot1);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 4, BoardSpace.Forest);
+            Assert.AreEqual(GamePhase.UsePeopleActions, game.Phase);
+
+            var result = game.PayForHutTile(Guid.NewGuid(), new Dictionary<Resource, int> { { Resource.Wood, 1 } });
+
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
+    [Ignore]
     public class GameTest_ClaimLotteryResult : GameTestBase
     {
         // TODO: potentially inject the deck of cards to make this easier to test
@@ -1103,6 +1225,7 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
+    [Ignore]
     public class GameTest_TapTool : GameTestBase
     {
         [Test]
@@ -1139,6 +1262,7 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
+    [Ignore]
     public class GameTest_UseSpecialAction : GameTestBase
     {
         // TODO: potentially inject the deck of cards to make this easier to test
@@ -1271,74 +1395,4 @@ namespace StoneAge.Core.Tests.Models
             Assert.IsFalse(result.Successful);
         }
     }
-
-    //[TestFixture]
-    //public class GameBoardTest_Next
-    //{
-    //    [Test]
-    //    public void PlayersRotate()
-    //    {
-    //        var board = new GameBoard(PlayerColor.Blue, PlayerColor.Red, PlayerColor.Green, PlayerColor.Yellow);
-
-    //        Assert.AreEqual(PlayerColor.Blue, board.Current.Color);
-
-    //        board.Next();
-
-    //        Assert.AreEqual(PlayerColor.Red, board.Current.Color);
-
-    //        board.Next();
-
-    //        Assert.AreEqual(PlayerColor.Green, board.Current.Color);
-
-    //        board.Next();
-
-    //        Assert.AreEqual(PlayerColor.Yellow, board.Current.Color);
-
-    //        board.Next();
-
-    //        Assert.AreEqual(PlayerColor.Blue, board.Current.Color);
-    //    }
-
-    //    [Test]
-    //    public void TemporarilySelectedLocationBecomesPerminantAtEndOfTurn()
-    //    {
-    //        var board = new GameBoard(PlayerColor.Blue);
-
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].ThinkingOf, null);
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].HeldBy, null);
-
-    //        board.Spaces[BoardSpace.Forest].ThinkingOf = PlayerColor.Blue;
-
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].ThinkingOf, PlayerColor.Blue);
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].HeldBy, null);
-
-    //        board.Next();
-
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].ThinkingOf, null);
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].HeldBy, PlayerColor.Blue);
-    //    }
-    //}
-
-    //[TestFixture]
-    //public class GameBoardTest_TryToOccupySpace
-    //{
-    //    [Test]
-    //    public void TemporarilySelectedLocationBecomesPerminantAtEndOfTurn()
-    //    {
-    //        var board = new GameBoard(PlayerColor.Blue);
-
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].ThinkingOf, null);
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].HeldBy, null);
-
-    //        board.Spaces[BoardSpace.Forest].ThinkingOf = PlayerColor.Blue;
-
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].ThinkingOf, PlayerColor.Blue);
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].HeldBy, null);
-
-    //        board.Next();
-
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].ThinkingOf, null);
-    //        Assert.AreEqual(board.Spaces[BoardSpace.Forest].HeldBy, PlayerColor.Blue);
-    //    }
-    //}
 }

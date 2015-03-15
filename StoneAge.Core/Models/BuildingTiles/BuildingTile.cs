@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace StoneAge.Core.Models
+namespace StoneAge.Core.Models.BuildingTiles
 {
     public class BuildingTile
     {

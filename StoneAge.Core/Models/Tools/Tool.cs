@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StoneAge.Core.Models
+namespace StoneAge.Core.Models.Tools
 {
     public struct Tool
     {

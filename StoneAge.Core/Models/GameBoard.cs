@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using StoneAge.Core.Models.BoardSpaces;
+using StoneAge.Core.Models.BuildingTiles;
+using StoneAge.Core.Models.Cards;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace StoneAge.Core.Models
@@ -27,28 +30,33 @@ namespace StoneAge.Core.Models
         public Card CardSlot3;
         public Card CardSlot4;
 
-        public readonly HutStack HutStack1;
-        public readonly HutStack HutStack2;
-        public readonly HutStack HutStack3;
-        public readonly HutStack HutStack4;
+        public readonly BuildingTileStack HutStack1;
+        public readonly BuildingTileStack HutStack2;
+        public readonly BuildingTileStack HutStack3;
+        public readonly BuildingTileStack HutStack4;
 
         public IList<Space> Spaces;
 
         public GameBoard()
+            : this(new StandardCardDeckCreator())
+        {
+        }
+
+        public GameBoard(ICardDeckCreator cardDeckCreator)
         {
             WoodAvailable = TOTAL_WOOD;
             BrickAvailable = TOTAL_BRICK;
             StoneAvailable = TOTAL_STONE;
             GoldAvailable = TOTAL_GOLD;
 
-            CardDeck = new Stack<Card>(Card.All.Shuffle());
+            CardDeck = new Stack<Card>(cardDeckCreator.Shuffle());
 
             var shuffledBuildingHutTiles = new List<BuildingTile>(BuildingTile.All.Shuffle());
 
-            HutStack1 = new HutStack(shuffledBuildingHutTiles.Skip(0).Take(7));
-            HutStack2 = new HutStack(shuffledBuildingHutTiles.Skip(7).Take(7));
-            HutStack3 = new HutStack(shuffledBuildingHutTiles.Skip(14).Take(7));
-            HutStack4 = new HutStack(shuffledBuildingHutTiles.Skip(21).Take(7));
+            HutStack1 = new BuildingTileStack(shuffledBuildingHutTiles.Skip(0).Take(7));
+            HutStack2 = new BuildingTileStack(shuffledBuildingHutTiles.Skip(7).Take(7));
+            HutStack3 = new BuildingTileStack(shuffledBuildingHutTiles.Skip(14).Take(7));
+            HutStack4 = new BuildingTileStack(shuffledBuildingHutTiles.Skip(21).Take(7));
 
             Tool1or2Available = TOTAL_1_2_TOOLS;
             Tool3or4Available = TOTAL_3_4_TOOLS;
@@ -60,171 +68,23 @@ namespace StoneAge.Core.Models
         {
             Spaces = new List<Space>
             {
-                new Space(BoardSpace.HuntingGrounds, maxQuantity: 40),
-                //new Space(BoardSpace.Forest, maxQuantity: 7),
-                //new Space(BoardSpace.ClayPit, maxQuantity: 7),
-                //new Space(BoardSpace.Quarry, maxQuantity: 7),
-                //new Space(BoardSpace.River, maxQuantity: 7),
-                new Space(BoardSpace.ToolMaker, maxQuantity: 1),
-                new Space(BoardSpace.Hut, 2, 2),
-                new Space(BoardSpace.Field, maxQuantity: 1),
-                new Space(BoardSpace.CivilizationCardSlot1, maxQuantity: 1),
-                new Space(BoardSpace.CivilizationCardSlot2, maxQuantity: 1),
-                new Space(BoardSpace.CivilizationCardSlot3, maxQuantity: 1),
-                new Space(BoardSpace.CivilizationCardSlot4, maxQuantity: 1),
-                new Space(BoardSpace.BuildingTileSlot1, maxQuantity: 1),
-                new Space(BoardSpace.BuildingTileSlot2, maxQuantity: 1),
-                new Space(BoardSpace.BuildingTileSlot3, maxQuantity: 1),
-                new Space(BoardSpace.BuildingTileSlot4, maxQuantity: 1),
+                new Space(BoardSpace.HuntingGrounds, new UnlimitedSpacesForPeople()),
+                new Space(BoardSpace.Forest, new CanPlace1To7People()),
+                new Space(BoardSpace.ClayPit, new CanPlace1To7People()),
+                new Space(BoardSpace.Quarry, new CanPlace1To7People()),
+                new Space(BoardSpace.River, new CanPlace1To7People()),
+                new Space(BoardSpace.ToolMaker, new CanOnlyPlace1Person()),
+                new Space(BoardSpace.Hut, new CanOnlyPlace2People()),
+                new Space(BoardSpace.Field, new CanOnlyPlace1Person()),
+                new Space(BoardSpace.CivilizationCardSlot1, new CanOnlyPlace1Person()),
+                new Space(BoardSpace.CivilizationCardSlot2, new CanOnlyPlace1Person()),
+                new Space(BoardSpace.CivilizationCardSlot3, new CanOnlyPlace1Person()),
+                new Space(BoardSpace.CivilizationCardSlot4, new CanOnlyPlace1Person()),
+                new Space(BoardSpace.BuildingTileSlot1, new CanOnlyPlace1Person()),
+                new Space(BoardSpace.BuildingTileSlot2, new CanOnlyPlace1Person()),
+                new Space(BoardSpace.BuildingTileSlot3, new CanOnlyPlace1Person()),
+                new Space(BoardSpace.BuildingTileSlot4, new CanOnlyPlace1Person()),
             };
-        }
-
-        //public void Next()
-        //{
-        //    //++_current;
-        //    //if (_current >= Players.Count())
-        //    //    _current = 0;
-
-        //    //foreach (Space space in Spaces.Values)
-        //    //{
-        //    //    if (space.HeldBy == null)
-        //    //    {
-        //    //        space.HeldBy = space.ThinkingOf;
-        //    //        space.ThinkingOf = null;
-        //    //    }
-        //    //}
-        //}
-
-        //public void TryToOccupySpace(BoardSpace Space)
-        //{
-        //    //if (Spaces[Space].HeldBy.HasValue)
-        //    //    return;
-
-        //    //if (Spaces[Space].ThinkingOf == null)
-        //    //    Spaces[Space].ThinkingOf = Current.Color;
-        //    //else
-        //    //    Spaces[Space].ThinkingOf = null;
-        //}
-
-        //public PlayerColor? ColorOfSpace(BoardSpace Space)
-        //{
-        //    if (Spaces[Space].HeldBy.HasValue)
-        //    {
-        //        return Spaces[Space].HeldBy;
-        //    }
-        //    return Spaces[Space].ThinkingOf;
-        //}
-    }
-
-    public class HutStack
-    {
-        private readonly Stack<BuildingTile> _stack;
-
-        public bool HasTopFlipped { get; private set; }
-
-        public HutStack(IEnumerable<BuildingTile> buildingTiles)
-        {
-            _stack = new Stack<BuildingTile>(buildingTiles);
-        }
-
-        public void FlipTopCard()
-        {
-            HasTopFlipped = true;
-        }
-
-        public BuildingTile Top()
-        {
-            if (HasTopFlipped)
-                return _stack.Peek();
-            // TODO: should this throw an exception?
-            return null;
-        }
-
-        public BuildingTile TakeTop()
-        {
-            if (HasTopFlipped)
-                return _stack.Pop();
-            // TODO: should this throw an exception?
-            return null;
-        }
-
-        public int Remaining
-        {
-            get
-            {
-                return _stack.Count();
-            }
-        }
-
-        public bool IsEmpty
-        {
-            get
-            {
-                return !_stack.Any();
-            }
-        }
-    }
-
-    public class Space
-    {
-        public readonly BoardSpace BoardSpace;
-        public readonly int MinQuantity;
-        public readonly int MaxQuantity;
-
-        private Dictionary<PlayerColor, int> _quantitiesPerColor = new Dictionary<PlayerColor, int>();
-
-        public Space(BoardSpace boardSpace, int minQuantity = 1, int maxQuantity = 10)
-        {
-            BoardSpace = boardSpace;
-            MinQuantity = minQuantity;
-            MaxQuantity = maxQuantity;
-            _quantitiesPerColor = new Dictionary<PlayerColor, int>();
-        }
-        
-        public bool QuantityIsInvalidForSpace(int quantity)
-        {
-            if (quantity < MinQuantity || quantity > MaxQuantity)
-                return true;
-
-            if (BoardSpace == BoardSpace.Hut && quantity != 2)
-                return true;
-
-            return false;
-        }
-
-        public bool PlayerPreviouslyPlaced(Player player)
-        {
-            if (!_quantitiesPerColor.ContainsKey(player.Color))
-                _quantitiesPerColor.Add(player.Color, 0);
-
-            if (_quantitiesPerColor[player.Color] > 0)
-                return true;
-
-            return false;
-        }
-
-        public bool NotAvailable(int quantity)
-        {
-            if (_quantitiesPerColor.Values.Sum() + quantity > MaxQuantity)
-                return true;
-
-            return false;
-        }
-
-        public bool HasTooManyUniquePlayers()
-        {
-            // TODO: force number of unique player limit to space
-            // TODO: is there a limit in hunting grounds?
-
-            return false;
-        }
-
-        public void Place(Player player, int quantity)
-        {
-            if (!_quantitiesPerColor.ContainsKey(player.Color))
-                _quantitiesPerColor.Add(player.Color, quantity);
-
-            _quantitiesPerColor[player.Color] += quantity;
         }
     }
 

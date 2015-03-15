@@ -1,4 +1,7 @@
 ﻿using StoneAge.Core.Models;
+using StoneAge.Core.Models.Cards;
+using StoneAge.Core.Models.Players;
+using StoneAge.Core.Models.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -532,6 +535,18 @@ namespace StoneAge.Core
         //}
 
         private TurnOrder TurnOrder;
+    }
+
+    public enum GamePhase
+    {
+        ChoosePlayers,
+        SetUpBoard,
+        PlayersPlacePeople,
+        UsePeopleActions,
+        FeedPeople,
+        CheckIfEndGame,
+        NewRoundPrep,
+        FinalScoring,
     }
 
     public class TurnOrder
