@@ -1,6 +1,6 @@
 ﻿namespace StoneAge.Core.Models.BoardSpaces
 {
-    public class UnlimitedSpacesForPeople : ISpaceEvaluator
+    public class CanPlaceUnlimitedPeople : ISpaceEvaluator
     {
         public bool RangeIsValid(int quantity)
         {

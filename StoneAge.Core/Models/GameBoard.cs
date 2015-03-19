@@ -8,6 +8,12 @@ namespace StoneAge.Core.Models
 {
     public class GameBoard
     {
+        //53 food counters (worth 198)
+        //  16 x 1 value (16)
+        //  16 x 2 value (32)
+        //  12 x 5 value (60)
+        //  9 x 10 value (90)
+
         public const int TOTAL_WOOD = 20;
         public const int TOTAL_BRICK = 16;
         public const int TOTAL_STONE = 12;
@@ -38,11 +44,12 @@ namespace StoneAge.Core.Models
         public IList<Space> Spaces;
 
         public GameBoard()
-            : this(new StandardCardDeckCreator())
+            : this(new StandardCardDeckCreator(), new StandardBuildingTilePileCreator())
         {
         }
 
-        public GameBoard(ICardDeckCreator cardDeckCreator)
+        public GameBoard(ICardDeckCreator cardDeckCreator,
+            IBuildingTilePileCreator buildingTilePileCreator)
         {
             WoodAvailable = TOTAL_WOOD;
             BrickAvailable = TOTAL_BRICK;
@@ -51,7 +58,8 @@ namespace StoneAge.Core.Models
 
             CardDeck = new Stack<Card>(cardDeckCreator.Shuffle());
 
-            var shuffledBuildingHutTiles = new List<BuildingTile>(BuildingTile.All.Shuffle());
+            // TODO: move this into IBuildingTilePileCreator implementations
+            var shuffledBuildingHutTiles = new List<BuildingTile>(buildingTilePileCreator.Shuffle());
 
             HutStack1 = new BuildingTileStack(shuffledBuildingHutTiles.Skip(0).Take(7));
             HutStack2 = new BuildingTileStack(shuffledBuildingHutTiles.Skip(7).Take(7));
@@ -68,7 +76,7 @@ namespace StoneAge.Core.Models
         {
             Spaces = new List<Space>
             {
-                new Space(BoardSpace.HuntingGrounds, new UnlimitedSpacesForPeople()),
+                new Space(BoardSpace.HuntingGrounds, new CanPlaceUnlimitedPeople()),
                 new Space(BoardSpace.Forest, new CanPlace1To7People()),
                 new Space(BoardSpace.ClayPit, new CanPlace1To7People()),
                 new Space(BoardSpace.Quarry, new CanPlace1To7People()),
@@ -86,44 +94,5 @@ namespace StoneAge.Core.Models
                 new Space(BoardSpace.BuildingTileSlot4, new CanOnlyPlace1Person()),
             };
         }
-    }
-
-//53 food counters (worth 198)
-//  16 x 1 value (16)
-//  16 x 2 value (32)
-//  12 x 5 value (60)
-//  9 x 10 value (90)
-
-    public enum BoardSpace
-    {
-        HuntingGrounds,
-        Forest,
-        ClayPit,
-        Quarry,
-        River,
-        ToolMaker,
-        Hut,
-        Field,
-        CivilizationCardSlot1,
-        CivilizationCardSlot2,
-        CivilizationCardSlot3,
-        CivilizationCardSlot4,
-        BuildingTileSlot1,
-        BuildingTileSlot2,
-        BuildingTileSlot3,
-        BuildingTileSlot4,
-    }
-
-    public enum Resource
-    {
-        Wood = 3,
-        Brick = 4,
-        Stone = 5,
-        Gold = 6,
-    }
-
-    public enum SpecialAction
-    {
-        Take2ResourcesCard,
     }
 }

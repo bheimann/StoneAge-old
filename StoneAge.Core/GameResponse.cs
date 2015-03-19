@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StoneAge.Core.Models
+namespace StoneAge.Core
 {
     public class GameResponse<T> : GameResponse
     {

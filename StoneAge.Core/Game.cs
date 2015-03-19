@@ -1,4 +1,5 @@
 ﻿using StoneAge.Core.Models;
+using StoneAge.Core.Models.BoardSpaces;
 using StoneAge.Core.Models.Cards;
 using StoneAge.Core.Models.Players;
 using StoneAge.Core.Models.Tools;
@@ -60,6 +61,18 @@ namespace StoneAge.Core
         public const int MAX_PLAYER_COUNT = 4;
         public GamePhase Phase = GamePhase.ChoosePlayers;
         public int RoundNumber = 1; // TODO: make sure the round is incremented :)
+
+        public Game()
+            : this(new StandardPlayerBoardFactory())
+        {
+        }
+
+        public Game(IPlayerBoardFactory playerBoardFactory)
+        {
+            _playerBoardFactory = playerBoardFactory;
+
+            _dicePouch = new DicePouch();
+        }
 
         public GameResponse<Guid> AddPlayer()
         {
@@ -266,7 +279,7 @@ namespace StoneAge.Core
         private void PassOutPlayerBoards()
         {
             foreach (var player in _players)
-                player.PlayerBoard = new PlayerBoard();
+                player.PlayerBoard = _playerBoardFactory.CreateNew();
         }
 
         private bool PrepareNewRound()
@@ -301,10 +314,10 @@ namespace StoneAge.Core
                 Board.CardSlot4 = cardsForSlots.Dequeue();
             }
 
-            Board.HutStack1.FlipTopCard();
-            Board.HutStack2.FlipTopCard();
-            Board.HutStack3.FlipTopCard();
-            Board.HutStack4.FlipTopCard();
+            Board.HutStack1.FlipTopTile();
+            Board.HutStack2.FlipTopTile();
+            Board.HutStack3.FlipTopTile();
+            Board.HutStack4.FlipTopTile();
 
             if (Board.HutStack1.IsEmpty ||
                 Board.HutStack2.IsEmpty ||
@@ -316,6 +329,7 @@ namespace StoneAge.Core
 
             TurnOrder.NextCheiftan();
 
+            // TODO: Check once complete as I think this isn't needed
             foreach (var player in _players)
             {
                 player.PlayerBoard.PeopleToPlace = player.PlayerBoard.TotalPeople;
@@ -424,18 +438,93 @@ namespace StoneAge.Core
             throw new NotImplementedException();
         }
 
-        public GameResponse UseActionOfPeople(Guid playerId, BoardSpace space)
+        public GameResponse<DiceResult> UseActionOfPeople(Guid playerId, BoardSpace boardSpace)
         {
             if (Phase != GamePhase.UsePeopleActions)
-                return GameResponse.Fail();
+                return GameResponse<DiceResult>.Fail();
 
             var player = _players.SingleOrDefault(p => p.Id == playerId);
             if (player == null)
-                return GameResponse.Fail();
+                return GameResponse<DiceResult>.Fail();
 
-            // TODO: cannot use action where do not have people
+            var space = Board.Spaces.SingleOrDefault(s => s.BoardSpace == boardSpace);
+            if(!space.PlayerPreviouslyPlaced(player))
+                return GameResponse<DiceResult>.Fail();
 
-            throw new NotImplementedException();
+            var diceResult = UseAction(player, space);
+
+            // TODO: start
+            //if(_players.Sum(p => p.PlayerBoard.Re)
+            //Board.Spaces.Sum(s => s.QuantityPlaced)
+
+
+            return GameResponse<DiceResult>.Pass(diceResult);
+        }
+
+        private DiceResult UseAction(Player player, Space space)
+        {
+            var result = new DiceResult(new int [0]);
+            switch (space.BoardSpace)
+            {
+                case BoardSpace.HuntingGrounds:
+                    result = _dicePouch.Roll(space.QuantityPlaced(player));
+                    var diceSum = result.Sum();
+                    var numberOfFood = diceSum / 3;
+                    player.PlayerBoard.Food += numberOfFood;
+                    break;
+                case BoardSpace.Forest:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.ClayPit:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.Quarry:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.River:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.ToolMaker:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.Hut:
+                    ++player.PlayerBoard.PeopleToPlace;
+                    ++player.PlayerBoard.TotalPeople;
+                    break;
+                case BoardSpace.Field:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.CivilizationCardSlot1:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.CivilizationCardSlot2:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.CivilizationCardSlot3:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.CivilizationCardSlot4:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.BuildingTileSlot1:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.BuildingTileSlot2:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.BuildingTileSlot3:
+                    throw new NotImplementedException();
+                    break;
+                case BoardSpace.BuildingTileSlot4:
+                    throw new NotImplementedException();
+                    break;
+                default:
+                    throw new NotImplementedException();
+                    break;
+            }
+
+            space.ReturnToPlayer(player);
+            return result;
         }
 
         public GameResponse<Card> PayForCard(Guid playerId, IDictionary<Resource, int> resources)
@@ -535,6 +624,8 @@ namespace StoneAge.Core
         //}
 
         private TurnOrder TurnOrder;
+        private DicePouch _dicePouch;
+        private IPlayerBoardFactory _playerBoardFactory;
     }
 
     public enum GamePhase

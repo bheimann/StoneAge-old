@@ -8,19 +8,9 @@ namespace StoneAge.Core.Models.BoardSpaces
     public class Space
     {
         public readonly BoardSpace BoardSpace;
-        public readonly int MinQuantity;
-        public readonly int MaxQuantity;
         private ISpaceEvaluator _quantityEvaluator;
 
         private Dictionary<PlayerColor, int> _quantitiesPerColor = new Dictionary<PlayerColor, int>();
-
-        public Space(BoardSpace boardSpace, int minQuantity = 1, int maxQuantity = 10)
-        {
-            BoardSpace = boardSpace;
-            MinQuantity = minQuantity;
-            MaxQuantity = maxQuantity;
-            _quantitiesPerColor = new Dictionary<PlayerColor, int>();
-        }
 
         public Space(BoardSpace boardSpace, ISpaceEvaluator quantityEvaluator)
         {
@@ -31,19 +21,10 @@ namespace StoneAge.Core.Models.BoardSpaces
 
         public bool QuantityIsInvalidForSpace(int quantity)
         {
-            if (_quantityEvaluator != null)
             if (_quantityEvaluator.RangeIsValid(quantity))
                 return false;
-            else
-                return true;
 
-            if (quantity < MinQuantity || quantity > MaxQuantity)
-                return true;
-
-            if (BoardSpace == BoardSpace.Hut && quantity != 2)
-                return true;
-
-            return false;
+            return true;
         }
 
         public bool PlayerPreviouslyPlaced(Player player)
@@ -60,16 +41,10 @@ namespace StoneAge.Core.Models.BoardSpaces
         public bool NotAvailable(int quantity)
         {
             var usedSpaces = _quantitiesPerColor.Values.Sum();
-            if (_quantityEvaluator != null)
-                if (_quantityEvaluator.HasEnoughFreeSpaces(usedSpaces, quantity))
-                    return false;
-                else
-                    return true;
+            if (_quantityEvaluator.HasEnoughFreeSpaces(usedSpaces, quantity))
+                return false;
 
-            if (usedSpaces + quantity > MaxQuantity)
-                return true;
-
-            return false;
+            return true;
         }
 
         public bool HasTooManyUniquePlayers()
@@ -82,10 +57,18 @@ namespace StoneAge.Core.Models.BoardSpaces
 
         public void Place(Player player, int quantity)
         {
-            if (!_quantitiesPerColor.ContainsKey(player.Color))
-                _quantitiesPerColor.Add(player.Color, quantity);
-
             _quantitiesPerColor[player.Color] += quantity;
+        }
+
+        public int QuantityPlaced(Player player)
+        {
+            return _quantitiesPerColor[player.Color];
+        }
+
+        public void ReturnToPlayer(Player player)
+        {
+            player.PlayerBoard.PeopleToPlace += QuantityPlaced(player);
+            _quantitiesPerColor[player.Color] = 0;
         }
     }
 }

@@ -10,12 +10,24 @@ namespace StoneAge.Core
 
         private List<int> _dice = new List<int>();
 
+        public DiceResult(IEnumerable<int> dice)
+        {
+            foreach (var die in dice)
+                Add(die);
+            _dice.Sort();
+        }
+
+        private void Add(int dieValue)
+        {
+            if (dieValue > 6 || dieValue < 1)
+            {
+                throw new InvadidDieNumberException(dieValue);
+            }
+            _dice.Add(dieValue);
+        }
+
         public IEnumerable<int> Summary()
         {
-            if (_needsSorted)
-                _dice.Sort();
-            _needsSorted = false;
-            
             return _dice;
         }
 
@@ -23,22 +35,8 @@ namespace StoneAge.Core
         {
             get
             {
-                if (_needsSorted)
-                    _dice.Sort();
-                _needsSorted = false;
-
                 return _dice[index];
             }
-        }
-
-        public void Add(int dieValue)
-        {
-            if (dieValue > 6 || dieValue < 1)
-            {
-                throw new InvadidDieNumberException(dieValue);
-            }
-            _needsSorted = true;
-            _dice.Add(dieValue);
         }
 
         public int Sum()

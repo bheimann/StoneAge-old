@@ -14,7 +14,7 @@ namespace StoneAge.Core.Models.BuildingTiles
             _stack = new Stack<BuildingTile>(buildingTiles);
         }
 
-        public void FlipTopCard()
+        public void FlipTopTile()
         {
             HasTopFlipped = true;
         }

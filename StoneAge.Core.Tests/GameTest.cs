@@ -34,6 +34,12 @@ namespace StoneAge.Core.Tests.Models
             Assert.AreEqual(GamePhase.PlayersPlacePeople, game.Phase);
         }
 
+        protected void SetupUltimate2PlayerGame()
+        {
+            game = new Game(new UltimatePlayerBoardFactory());
+            SetUpStandard2PlayerGame();
+        }
+
         protected void WaitForBoardSetupToComplete()
         {
             for (int i = 0; i < 1000; i++)
@@ -935,14 +941,24 @@ namespace StoneAge.Core.Tests.Models
             Assert.IsFalse(result.Successful);
         }
 
+        [Test]
+        public void Cannot_place_person_where_already_full()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 1, BoardSpace.Field);
+
+            var result = game.PlacePeople(player2, 1, BoardSpace.Field);
+
+            Assert.IsFalse(result.Successful);
+        }
+
         [TestCase(BoardSpace.Forest)]
         [TestCase(BoardSpace.ClayPit)]
         [TestCase(BoardSpace.Quarry)]
         [TestCase(BoardSpace.River)]
         public void Can_place_7_people_in_locations(BoardSpace space)
         {
-            SetUpStandard2PlayerGame();
-            // TODO: revisit once the ability to perform Hut actions and feed work
+            SetupUltimate2PlayerGame();
 
             var result = game.PlacePeople(player1, 7, space);
 
@@ -952,8 +968,7 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_place_10_people_in_HuntingGrounds()
         {
-            SetUpStandard2PlayerGame();
-            // TODO: revisit once the ability to perform Hut actions and feed work
+            SetupUltimate2PlayerGame();
 
             var result = game.PlacePeople(player1, 10, BoardSpace.HuntingGrounds);
 
@@ -1025,7 +1040,6 @@ namespace StoneAge.Core.Tests.Models
     public class GameTest_UseActionOfPeople : GameTestBase
     {
         [Test]
-        [Ignore]
         public void Can_use_people_action_in_UsePeopleActions_Phase()
         {
             SetUpStandard2PlayerGame();
@@ -1065,6 +1079,50 @@ namespace StoneAge.Core.Tests.Models
             var result = game.UseActionOfPeople(Guid.NewGuid(), BoardSpace.HuntingGrounds);
 
             Assert.IsFalse(result.Successful);
+        }
+
+        [Test]
+        public void Cannot_use_people_action_where_Player_has_no_people()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+
+            var result = game.UseActionOfPeople(player1, BoardSpace.Forest);
+
+            Assert.IsFalse(result.Successful);
+        }
+
+        [Test]
+        public void Can_use_breeding_hut()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 2, BoardSpace.Hut);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 3, BoardSpace.HuntingGrounds);
+
+            var result = game.UseActionOfPeople(player1, BoardSpace.Hut);
+
+            Assert.IsTrue(result.Successful);
+        }
+
+        [Test]
+        public void Using_breeding_hut_increase_population_by_1()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 2, BoardSpace.Hut);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 3, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player1, BoardSpace.Hut);
+            game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
+            game.FeedPeople(player1);
+            game.FeedPeople(player2);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+
+            var result = game.PlacePeople(player1, 6, BoardSpace.HuntingGrounds);
+
+            Assert.IsTrue(result.Successful);
         }
     }
 
@@ -1393,6 +1451,67 @@ namespace StoneAge.Core.Tests.Models
             var result = game.UseSpecialAction(playerId, SpecialAction.Take2ResourcesCard);
 
             Assert.IsFalse(result.Successful);
+        }
+    }
+
+    [TestFixture]
+    public class GameTest_FeedPeople : GameTestBase
+    {
+        [Test]
+        public void Can_feed_people_in_FeedPeople_Phase()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
+            Assert.AreEqual(GamePhase.FeedPeople, game.Phase);
+
+            var result = game.FeedPeople(player1);
+
+            Assert.IsTrue(result.Successful);
+        }
+
+        [TestCase(GamePhase.ChoosePlayers)]
+        [TestCase(GamePhase.SetUpBoard)]
+        [TestCase(GamePhase.PlayersPlacePeople)]
+        [TestCase(GamePhase.UsePeopleActions)]
+        [TestCase(GamePhase.CheckIfEndGame)]
+        [TestCase(GamePhase.NewRoundPrep)]
+        [TestCase(GamePhase.FinalScoring)]
+        public void Cannot_use_special_action_in_Phase(GamePhase phase)
+        {
+            var playerId = game.AddPlayer().Value;
+            game.Phase = phase;
+
+            var result = game.FeedPeople(player1);
+
+            Assert.IsFalse(result.Successful);
+        }
+    }
+
+    public class UltimatePlayerBoardFactory : IPlayerBoardFactory
+    {
+        public PlayerBoard CreateNew()
+        {
+            var playerBoard = new PlayerBoard
+            {
+                Food = int.MaxValue,
+                FoodTrack = 10,
+                PeopleToPlace = 10,
+                TotalPeople = 10,
+            };
+
+            playerBoard.Resources[Resource.Wood] = 999;
+            playerBoard.Resources[Resource.Brick] = 999;
+            playerBoard.Resources[Resource.Stone] = 999;
+            playerBoard.Resources[Resource.Gold] = 999;
+
+            playerBoard.Tools[0] = Tool.Plus4;
+            playerBoard.Tools[1] = Tool.Plus4;
+            playerBoard.Tools[2] = Tool.Plus4;
+
+            return playerBoard;
         }
     }
 }

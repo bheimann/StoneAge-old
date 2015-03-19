@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StoneAge.Core
+namespace StoneAge.Core.Models
 {
     public class DicePouch
     {
@@ -11,13 +11,13 @@ namespace StoneAge.Core
 
         public DiceResult Roll(int diceCount)
         {
-            var dice = new DiceResult();
-
+            var rolls = new List<int>();
             for (int i = 0; i < diceCount; i++)
             {
-                dice.Add(_random.Next(1, 7));
+                rolls.Add(_random.Next(1, 7));
             }
 
+            var dice = new DiceResult(rolls);
             return dice;
         }
     }

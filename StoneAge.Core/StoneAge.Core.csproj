@@ -35,15 +35,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DicePouch.cs" />
+    <Compile Include="Models\DicePouch.cs" />
     <Compile Include="DiceResult.cs" />
     <Compile Include="Exceptions\InvadidDieNumberException.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Models\BoardSpace.cs" />
     <Compile Include="Models\BoardSpaces\CanOnlyPlace1Person.cs" />
     <Compile Include="Models\BoardSpaces\CanOnlyPlace2People.cs" />
     <Compile Include="Models\BoardSpaces\CanPlace1To7People.cs" />
     <Compile Include="Models\BoardSpaces\ISpaceEvaluator.cs" />
-    <Compile Include="Models\BoardSpaces\UnlimitedSpacesForPeople.cs" />
+    <Compile Include="Models\BoardSpaces\CanPlaceUnlimitedPeople.cs" />
     <Compile Include="Models\BuildingTiles\BuildingTileStack.cs" />
     <Compile Include="Models\BuildingTiles\IBuildingTilePileCreator.cs" />
     <Compile Include="Models\BuildingTiles\StandardBuildingTilePileCreator.cs" />
@@ -52,12 +53,16 @@
     <Compile Include="Models\Cards\ICardDeckCreator.cs" />
     <Compile Include="Models\Cards\StandardCardDeckCreator.cs" />
     <Compile Include="Models\Players\Chair.cs" />
+    <Compile Include="Models\Players\IPlayerBoardFactory.cs" />
     <Compile Include="Models\Players\PlayerBoard.cs" />
     <Compile Include="Models\Players\PlayerColor.cs" />
     <Compile Include="Models\Players\PlayerMode.cs" />
     <Compile Include="Models\BoardSpaces\Space.cs" />
+    <Compile Include="Models\Players\StandardPlayerBoardFactory.cs" />
+    <Compile Include="Models\Resource.cs" />
+    <Compile Include="Models\SpecialAction.cs" />
     <Compile Include="RandomizationExtensions.cs" />
-    <Compile Include="Models\GameResponse.cs" />
+    <Compile Include="GameResponse.cs" />
     <Compile Include="Models\GameBoard.cs" />
     <Compile Include="Models\Cards\Card.cs" />
     <Compile Include="Models\BuildingTiles\BuildingTile.cs" />
