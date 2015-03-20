@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace StoneAge.Core.Models.Tools
+﻿namespace StoneAge.Core.Models.Tools
 {
     public struct Tool
     {

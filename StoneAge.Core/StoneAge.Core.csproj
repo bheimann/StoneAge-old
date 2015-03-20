@@ -37,7 +37,7 @@
   <ItemGroup>
     <Compile Include="Models\DicePouch.cs" />
     <Compile Include="DiceResult.cs" />
-    <Compile Include="Exceptions\InvadidDieNumberException.cs" />
+    <Compile Include="Exceptions\InvalidDieNumberException.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Models\BoardSpace.cs" />
     <Compile Include="Models\BoardSpaces\CanOnlyPlace1Person.cs" />

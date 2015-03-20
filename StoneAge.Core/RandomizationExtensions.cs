@@ -6,7 +6,7 @@ namespace StoneAge.Core
 {
     public static class RandomizationExtensions
     {
-        private static Random _random = new Random();
+        private static readonly Random _random = new Random();
 
         public static IList<T> Shuffle<T>(this IList<T> list)
         {

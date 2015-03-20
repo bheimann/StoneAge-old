@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace StoneAge.Core.Models
 {
     public class DicePouch
     {
-        private Random _random = new Random();
+        private readonly Random _random = new Random();
 
         public DiceResult Roll(int diceCount)
         {

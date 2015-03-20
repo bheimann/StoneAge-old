@@ -8,9 +8,9 @@ namespace StoneAge.Core.Models.BoardSpaces
     public class Space
     {
         public readonly BoardSpace BoardSpace;
-        private ISpaceEvaluator _quantityEvaluator;
+        private readonly ISpaceEvaluator _quantityEvaluator;
 
-        private Dictionary<PlayerColor, int> _quantitiesPerColor = new Dictionary<PlayerColor, int>();
+        private readonly Dictionary<PlayerColor, int> _quantitiesPerColor;
 
         public Space(BoardSpace boardSpace, ISpaceEvaluator quantityEvaluator)
         {

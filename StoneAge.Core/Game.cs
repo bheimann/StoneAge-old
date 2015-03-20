@@ -1,13 +1,13 @@
-﻿using StoneAge.Core.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using StoneAge.Core.Models;
 using StoneAge.Core.Models.BoardSpaces;
 using StoneAge.Core.Models.Cards;
 using StoneAge.Core.Models.Players;
 using StoneAge.Core.Models.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace StoneAge.Core
 {
@@ -52,7 +52,7 @@ namespace StoneAge.Core
 
     //Final Scoring
 
-    [System.Diagnostics.DebuggerDisplay("{RoundNumber} {Phase}")]
+    [DebuggerDisplay("{RoundNumber} {Phase}")]
     public class Game
     {
         // have a mechanism for giving status notifications
@@ -453,7 +453,6 @@ namespace StoneAge.Core
 
             var diceResult = UseAction(player, space);
 
-            // TODO: start
             //if(_players.Sum(p => p.PlayerBoard.Re)
             //Board.Spaces.Sum(s => s.QuantityPlaced)
 
@@ -624,8 +623,8 @@ namespace StoneAge.Core
         //}
 
         private TurnOrder TurnOrder;
-        private DicePouch _dicePouch;
-        private IPlayerBoardFactory _playerBoardFactory;
+        private readonly DicePouch _dicePouch;
+        private readonly IPlayerBoardFactory _playerBoardFactory;
     }
 
     public enum GamePhase

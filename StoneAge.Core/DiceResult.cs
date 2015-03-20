@@ -6,9 +6,7 @@ namespace StoneAge.Core
 {
     public class DiceResult
     {
-        private bool _needsSorted = false;
-
-        private List<int> _dice = new List<int>();
+        private readonly List<int> _dice = new List<int>();
 
         public DiceResult(IEnumerable<int> dice)
         {
@@ -21,7 +19,7 @@ namespace StoneAge.Core
         {
             if (dieValue > 6 || dieValue < 1)
             {
-                throw new InvadidDieNumberException(dieValue);
+                throw new InvalidDieNumberException(dieValue);
             }
             _dice.Add(dieValue);
         }

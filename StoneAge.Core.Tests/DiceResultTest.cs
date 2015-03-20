@@ -22,7 +22,7 @@ namespace StoneAge.Core.Tests
         [TestCase(7)]
         public void InvalidValuesThrowInvadidDieNumberException(int value)
         {
-            Assert.Throws<InvadidDieNumberException>(() => new DiceResult(new []{value}));
+            Assert.Throws<InvalidDieNumberException>(() => new DiceResult(new []{value}));
         }
 
         [TestCase(1)]

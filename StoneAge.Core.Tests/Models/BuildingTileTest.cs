@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using StoneAge.Core.Models;
 using StoneAge.Core.Models.BuildingTiles;
 
 namespace StoneAge.Core.Tests.Models
