@@ -58,9 +58,11 @@
     <Compile Include="Models\Players\PlayerColor.cs" />
     <Compile Include="Models\Players\PlayerMode.cs" />
     <Compile Include="Models\BoardSpaces\Space.cs" />
+    <Compile Include="Models\Players\PlayerStats.cs" />
     <Compile Include="Models\Players\StandardPlayerBoardFactory.cs" />
     <Compile Include="Models\Resource.cs" />
     <Compile Include="Models\SpecialAction.cs" />
+    <Compile Include="Models\Tools\ToolExtensions.cs" />
     <Compile Include="RandomizationExtensions.cs" />
     <Compile Include="GameResponse.cs" />
     <Compile Include="Models\GameBoard.cs" />

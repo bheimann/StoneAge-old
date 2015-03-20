@@ -37,6 +37,8 @@ namespace StoneAge.Core.Models.Players
             Tools[1] = startingTool;
             Tools[2] = startingTool;
 
+            UntapTools();
+
             FoodTrack = STARTING_FOOD_TRACK;
             Score = STARTING_SCORE;
         }
@@ -49,6 +51,13 @@ namespace StoneAge.Core.Models.Players
         public void SetPeopleAsPlaced(int quantity)
         {
             PeopleToPlace -= quantity;
+        }
+
+        public void UntapTools()
+        {
+            Tools[0].Used = false;
+            Tools[1].Used = false;
+            Tools[2].Used = false;
         }
 
         private const int STARTING_PEOPLE_COUNT = 5;

@@ -391,6 +391,43 @@ namespace StoneAge.Core
             return GameResponse.Pass();
         }
 
+        public GameResponse<PlayerStats> RequestPlayerStats(Guid playerId, Chair chair)
+        {
+            if (chair == Chair.Standing)
+                return GameResponse<PlayerStats>.Fail();
+
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse<PlayerStats>.Fail();
+
+            var playerForStats = _players.SingleOrDefault(p => p.Chair == chair);
+            if (playerForStats == null)
+                return GameResponse<PlayerStats>.Fail();
+
+            var playerStats = new PlayerStats(playerForStats);
+            return GameResponse<PlayerStats>.Pass(playerStats);
+        }
+
+        public GameResponse<PlayerStats> RequestPlayerStats(Guid playerId)
+        {
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse<PlayerStats>.Fail();
+
+            var playerStats = new PlayerStats(player);
+            return GameResponse<PlayerStats>.Pass(playerStats);
+        }
+
+        public GameResponse<IEnumerable<PlayerStats>> RequestAllPlayerStats(Guid playerId)
+        {
+            var player = _players.SingleOrDefault(p => p.Id == playerId);
+            if (player == null)
+                return GameResponse<IEnumerable<PlayerStats>>.Fail();
+
+            var playerStats = _players.Select(p => new PlayerStats(p));
+            return GameResponse<IEnumerable<PlayerStats>>.Pass(playerStats);
+        }
+
         public GameResponse PlacePeople(Guid playerId, int quantity, BoardSpace boardSpace)
         {
             if (Phase != GamePhase.PlayersPlacePeople)
@@ -453,9 +490,9 @@ namespace StoneAge.Core
 
             var diceResult = UseAction(player, space);
 
+            // TODO: start here to allow advancing the round
             //if(_players.Sum(p => p.PlayerBoard.Re)
             //Board.Spaces.Sum(s => s.QuantityPlaced)
-
 
             return GameResponse<DiceResult>.Pass(diceResult);
         }
@@ -472,26 +509,33 @@ namespace StoneAge.Core
                     player.PlayerBoard.Food += numberOfFood;
                     break;
                 case BoardSpace.Forest:
+                    // TODO: be sure to test max on food track, population, tools, resources
                     throw new NotImplementedException();
                     break;
                 case BoardSpace.ClayPit:
+                    // TODO: be sure to test max on food track, population, tools, resources
                     throw new NotImplementedException();
                     break;
                 case BoardSpace.Quarry:
+                    // TODO: be sure to test max on food track, population, tools, resources
                     throw new NotImplementedException();
                     break;
                 case BoardSpace.River:
+                    // TODO: be sure to test max on food track, population, tools, resources
                     throw new NotImplementedException();
                     break;
                 case BoardSpace.ToolMaker:
+                    // TODO: be sure to test max on food track, population, tools, resources
                     throw new NotImplementedException();
                     break;
                 case BoardSpace.Hut:
+                    // TODO: be sure to test max on food track, population, tools, resources
                     ++player.PlayerBoard.PeopleToPlace;
                     ++player.PlayerBoard.TotalPeople;
                     break;
                 case BoardSpace.Field:
-                    throw new NotImplementedException();
+                    // TODO: be sure to test max on food track, population, tools, resources
+                    ++player.PlayerBoard.FoodTrack;
                     break;
                 case BoardSpace.CivilizationCardSlot1:
                     throw new NotImplementedException();
@@ -627,6 +671,7 @@ namespace StoneAge.Core
         private readonly IPlayerBoardFactory _playerBoardFactory;
     }
 
+    // TODO: should UseTool and other subphases be added
     public enum GamePhase
     {
         ChoosePlayers,

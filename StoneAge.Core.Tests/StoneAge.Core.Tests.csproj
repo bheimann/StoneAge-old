@@ -48,6 +48,7 @@
     <Compile Include="DiceResultTest.cs" />
     <Compile Include="Models\GameBoardTest.cs" />
     <Compile Include="Models\PlayerBoardTest.cs" />
+    <Compile Include="Models\Players\PlayerStatsTest.cs" />
     <Compile Include="Models\PlayerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShuffleTest.cs" />

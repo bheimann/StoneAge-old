@@ -613,6 +613,144 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
+    public class GameTest_RequestPlayerStats : GameTestBase
+    {
+        [TestCase(GamePhase.ChoosePlayers)]
+        [TestCase(GamePhase.SetUpBoard)]
+        [TestCase(GamePhase.PlayersPlacePeople)]
+        [TestCase(GamePhase.UsePeopleActions)]
+        [TestCase(GamePhase.FeedPeople)]
+        [TestCase(GamePhase.CheckIfEndGame)]
+        [TestCase(GamePhase.NewRoundPrep)]
+        [TestCase(GamePhase.FinalScoring)]
+        public void Can_request_Player_stats_in_any_Phase(GamePhase phase)
+        {
+            var chair = Chair.North;
+            player1 = game.AddPlayer().Value;
+            game.SetPlayerSeat(player1, chair);
+            game.Phase = phase;
+
+            var result = game.RequestPlayerStats(player1, chair);
+
+            Assert.IsTrue(result.Successful);
+        }
+
+        [Test]
+        public void Cannot_request_Player_stats_for_a_non_existent_player()
+        {
+            var chair = Chair.North;
+            player1 = game.AddPlayer().Value;
+            game.SetPlayerSeat(player1, chair);
+
+            var result = game.RequestPlayerStats(Guid.NewGuid(), chair);
+
+            Assert.IsFalse(result.Successful);
+        }
+
+        [Test]
+        public void Cannot_request_Player_stats_for_an_empty_Chair()
+        {
+            var chair = Chair.North;
+            player1 = game.AddPlayer().Value;
+            game.SetPlayerSeat(player1, chair);
+
+            var result = game.RequestPlayerStats(player1, Chair.South);
+
+            Assert.IsFalse(result.Successful);
+        }
+
+        [Test]
+        public void Cannot_request_Player_stats_for_Standing_Chair()
+        {
+            var chair = Chair.North;
+            player1 = game.AddPlayer().Value;
+            game.SetPlayerSeat(player1, chair);
+
+            var result = game.RequestPlayerStats(player1, Chair.Standing);
+
+            Assert.IsFalse(result.Successful);
+        }
+    }
+
+    [TestFixture]
+    public class GameTest_RequestPlayerStats_Self : GameTestBase
+    {
+        [TestCase(GamePhase.ChoosePlayers)]
+        [TestCase(GamePhase.SetUpBoard)]
+        [TestCase(GamePhase.PlayersPlacePeople)]
+        [TestCase(GamePhase.UsePeopleActions)]
+        [TestCase(GamePhase.FeedPeople)]
+        [TestCase(GamePhase.CheckIfEndGame)]
+        [TestCase(GamePhase.NewRoundPrep)]
+        [TestCase(GamePhase.FinalScoring)]
+        public void Can_request_Player_stats_in_any_Phase(GamePhase phase)
+        {
+            player1 = game.AddPlayer().Value;
+            game.Phase = phase;
+
+            var result = game.RequestPlayerStats(player1);
+
+            Assert.IsTrue(result.Successful);
+        }
+
+        [Test]
+        public void Cannot_request_Player_stats_for_a_non_existent_player()
+        {
+            player1 = game.AddPlayer().Value;
+
+            var result = game.RequestPlayerStats(Guid.NewGuid());
+
+            Assert.IsFalse(result.Successful);
+        }
+    }
+
+    [TestFixture]
+    public class GameTest_RequestAllPlayerStats : GameTestBase
+    {
+        [TestCase(GamePhase.ChoosePlayers)]
+        [TestCase(GamePhase.SetUpBoard)]
+        [TestCase(GamePhase.PlayersPlacePeople)]
+        [TestCase(GamePhase.UsePeopleActions)]
+        [TestCase(GamePhase.FeedPeople)]
+        [TestCase(GamePhase.CheckIfEndGame)]
+        [TestCase(GamePhase.NewRoundPrep)]
+        [TestCase(GamePhase.FinalScoring)]
+        public void Can_request_all_Player_stats_in_any_Phase(GamePhase phase)
+        {
+            player1 = game.AddPlayer().Value;
+            game.Phase = phase;
+
+            var result = game.RequestAllPlayerStats(player1);
+
+            Assert.IsTrue(result.Successful);
+        }
+
+        [Test]
+        public void Cannot_request_all_Player_stats_for_a_non_existent_player()
+        {
+            player1 = game.AddPlayer().Value;
+
+            var result = game.RequestAllPlayerStats(Guid.NewGuid());
+
+            Assert.IsFalse(result.Successful);
+        }
+
+        [Test]
+        public void Requesting_all_Player_stats_returns_for_multiple_players()
+        {
+            player1 = game.AddPlayer().Value;
+            game.AddPlayer();
+            game.AddPlayer();
+            game.AddPlayer();
+
+            var result = game.RequestAllPlayerStats(player1);
+
+            Assert.IsTrue(result.Successful);
+            Assert.AreEqual(4, result.Value.Count());
+        }
+    }
+
+    [TestFixture]
     public class GameTest_RenamePlayer : GameTestBase
     {
         // TODO: should this be an anytime setting? should this be a house rule?
@@ -1094,35 +1232,36 @@ namespace StoneAge.Core.Tests.Models
         }
 
         [Test]
-        public void Can_use_breeding_hut()
-        {
-            SetUpStandard2PlayerGame();
-            game.PlacePeople(player1, 2, BoardSpace.Hut);
-            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
-            game.PlacePeople(player1, 3, BoardSpace.HuntingGrounds);
-
-            var result = game.UseActionOfPeople(player1, BoardSpace.Hut);
-
-            Assert.IsTrue(result.Successful);
-        }
-
-        [Test]
         public void Using_breeding_hut_increase_population_by_1()
         {
             SetUpStandard2PlayerGame();
             game.PlacePeople(player1, 2, BoardSpace.Hut);
             game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
             game.PlacePeople(player1, 3, BoardSpace.HuntingGrounds);
-            game.UseActionOfPeople(player1, BoardSpace.Hut);
             game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
-            game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
-            game.FeedPeople(player1);
-            game.FeedPeople(player2);
-            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player1, BoardSpace.Hut);
 
-            var result = game.PlacePeople(player1, 6, BoardSpace.HuntingGrounds);
+            var result = game.RequestPlayerStats(player1);
 
             Assert.IsTrue(result.Successful);
+            Assert.AreEqual(6, result.Value.PeopleToPlace);
+            Assert.AreEqual(6, result.Value.TotalPeople);
+        }
+
+        [Test]
+        public void Using_field_increase_food_track_by_1()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 1, BoardSpace.Field);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 4, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player1, BoardSpace.Field);
+
+            var result = game.RequestPlayerStats(player1);
+
+            Assert.IsTrue(result.Successful);
+            Assert.AreEqual(1, result.Value.FoodTrack);
         }
     }
 

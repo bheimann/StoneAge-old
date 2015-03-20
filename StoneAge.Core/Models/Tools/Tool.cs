@@ -1,5 +1,6 @@
 ﻿namespace StoneAge.Core.Models.Tools
 {
+    [System.Diagnostics.DebuggerDisplay("{Value == 0 ? \"None\" : \"Plus \" + Value} {Used ? \"Tapped\" : \"Untapped\"}")]
     public struct Tool
     {
         public static Tool None { get { return new Tool(0); } }
