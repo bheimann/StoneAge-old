@@ -1127,7 +1127,22 @@ namespace StoneAge.Core.Tests.Models
             Assert.IsFalse(result.Successful);
         }
 
-        // TODO: add tests to ensure player order
+        [Test]
+        public void Must_place_people_in_the_correct_order()
+        {
+            SetUpStandard2PlayerGame();
+
+            var result1 = game.PlacePeople(player1, 1, BoardSpace.HuntingGrounds);
+            Assert.IsTrue(result1.Successful);
+            var result2 = game.PlacePeople(player2, 1, BoardSpace.HuntingGrounds);
+            Assert.IsTrue(result2.Successful);
+            var result_invalid = game.PlacePeople(player2, 1, BoardSpace.Forest);
+            Assert.IsFalse(result_invalid.Successful);
+            var result4 = game.PlacePeople(player1, 1, BoardSpace.Forest);
+            Assert.IsTrue(result4.Successful);
+            var result5 = game.PlacePeople(player2, 1, BoardSpace.Forest);
+            Assert.IsTrue(result5.Successful);
+        }
     }
 
     [TestFixture]
@@ -1347,6 +1362,7 @@ namespace StoneAge.Core.Tests.Models
             game.FeedPeople(player2);
             game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
             game.PlacePeople(player1, 6, BoardSpace.River);
+            game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
             var stats = game.RequestPlayerStats(player1);
             var preRollGold = stats.Value.Gold;
             game.UseActionOfPeople(player1, BoardSpace.River);
@@ -1357,7 +1373,36 @@ namespace StoneAge.Core.Tests.Models
             Assert.Less(preRollGold, result.Value.Gold);
         }
 
-        // TODO: add tests to ensure player order
+        [Test]
+        public void Cannot_use_actions_before_current_player_finishes()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 2, BoardSpace.Hut);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 1, BoardSpace.Field);
+            game.PlacePeople(player1, 2, BoardSpace.HuntingGrounds);
+            var result1 = game.UseActionOfPeople(player1, BoardSpace.Hut);
+            var result_fail1 = game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
+            var result2 = game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
+            var result3 = game.UseActionOfPeople(player1, BoardSpace.Field);
+            var result4 = game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
+            game.FeedPeople(player1);
+            game.FeedPeople(player2);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 6, BoardSpace.HuntingGrounds);
+            var result_fail2 = game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
+            var result5 = game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
+            var result6 = game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
+
+            Assert.IsTrue(result1.Successful);
+            Assert.IsFalse(result_fail1.Successful);
+            Assert.IsTrue(result2.Successful);
+            Assert.IsTrue(result3.Successful);
+            Assert.IsTrue(result4.Successful);
+            Assert.IsFalse(result_fail2.Successful);
+            Assert.IsTrue(result5.Successful);
+            Assert.IsTrue(result6.Successful);
+        }
     }
 
     [TestFixture]

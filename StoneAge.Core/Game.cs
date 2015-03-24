@@ -437,6 +437,9 @@ namespace StoneAge.Core
             if (player == null)
                 return GameResponse.Fail();
 
+            if (TurnOrder.Current != player)
+                return GameResponse.Fail();
+
             var space = Board.Spaces.SingleOrDefault(s => s.BoardSpace == boardSpace);
             if (space.QuantityIsInvalidForSpace(quantity))
                 return GameResponse.Fail();
@@ -456,8 +459,16 @@ namespace StoneAge.Core
             player.PlayerBoard.SetPeopleAsPlaced(quantity);
             space.Place(player, quantity);
 
+
             if (_players.Sum(p => p.PlayerBoard.PeopleToPlace) == 0)
+            {
                 Phase = GamePhase.UsePeopleActions;
+                TurnOrder.SetCheiftanToCurrent();
+            }
+            else
+            {
+                TurnOrder.NextPlayerToPlace();
+            }
 
             return GameResponse.Pass();
         }
@@ -484,11 +495,17 @@ namespace StoneAge.Core
             if (player == null)
                 return GameResponse<DiceResult>.Fail();
 
+            if(player != TurnOrder.Current)
+                return GameResponse<DiceResult>.Fail();
+
             var space = Board.Spaces.SingleOrDefault(s => s.BoardSpace == boardSpace);
             if(!space.PlayerPreviouslyPlaced(player))
                 return GameResponse<DiceResult>.Fail();
 
             var diceResult = UseAction(player, space);
+
+            if (player.PlayerBoard.PeopleToPlace == player.PlayerBoard.TotalPeople)
+                TurnOrder.Next();
 
             if (_players.Sum(p => p.PlayerBoard.PeopleToPlace) == _players.Sum(p => p.PlayerBoard.TotalPeople))
             {
@@ -766,12 +783,15 @@ namespace StoneAge.Core
             var moveToBack = _playerQueue.Dequeue();
             _playerQueue.Enqueue(moveToBack);
 
-            return Current();
+            return Current;
         }
 
-        public Player Current()
+        public Player Current
         {
-            return _playerQueue.Peek();
+            get
+            {
+                return _playerQueue.Peek();
+            }
         }
 
         public void SetCheiftan(Player player)
@@ -785,9 +805,20 @@ namespace StoneAge.Core
         {
             if (_cheiftanChair == Chair.Standing)
                 return;
-            while (_cheiftanChair != Next().Chair)
-                ;
+            SetCheiftanToCurrent();
             _cheiftanChair = Next().Chair;
+        }
+
+        public void SetCheiftanToCurrent()
+        {
+            while (_cheiftanChair != Current.Chair)
+                Next();
+        }
+
+        public void NextPlayerToPlace()
+        {
+            while (Next().PlayerBoard.PeopleToPlace == 0)
+                ;
         }
     }
 }
