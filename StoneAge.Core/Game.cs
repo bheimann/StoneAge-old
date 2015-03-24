@@ -490,9 +490,12 @@ namespace StoneAge.Core
 
             var diceResult = UseAction(player, space);
 
-            // TODO: start here to allow advancing the round
-            //if(_players.Sum(p => p.PlayerBoard.Re)
-            //Board.Spaces.Sum(s => s.QuantityPlaced)
+            if (_players.Sum(p => p.PlayerBoard.PeopleToPlace) == _players.Sum(p => p.PlayerBoard.TotalPeople))
+            {
+                foreach (var playerToChange in _players)
+                    playerToChange.NeedsToFeed = true;
+                Phase = GamePhase.FeedPeople;
+            }
 
             return GameResponse<DiceResult>.Pass(diceResult);
         }
@@ -503,67 +506,112 @@ namespace StoneAge.Core
             switch (space.BoardSpace)
             {
                 case BoardSpace.HuntingGrounds:
+                {
                     result = _dicePouch.Roll(space.QuantityPlaced(player));
                     var diceSum = result.Sum();
-                    var numberOfFood = diceSum / 3;
+                    var numberOfFood = diceSum / 2;
                     player.PlayerBoard.Food += numberOfFood;
                     break;
+                }
                 case BoardSpace.Forest:
+                {
                     // TODO: be sure to test max on food track, population, tools, resources
-                    throw new NotImplementedException();
+                    result = _dicePouch.Roll(space.QuantityPlaced(player));
+                    var diceSum = result.Sum();
+                    var wholeResources = diceSum / (int)Resource.Wood;
+                    player.PlayerBoard.Resources[Resource.Wood] += wholeResources;
                     break;
+                }
                 case BoardSpace.ClayPit:
+                {
                     // TODO: be sure to test max on food track, population, tools, resources
-                    throw new NotImplementedException();
+                    result = _dicePouch.Roll(space.QuantityPlaced(player));
+                    var diceSum = result.Sum();
+                    var wholeResources = diceSum / (int)Resource.Brick;
+                    player.PlayerBoard.Resources[Resource.Brick] += wholeResources;
                     break;
+                }
                 case BoardSpace.Quarry:
+                {
                     // TODO: be sure to test max on food track, population, tools, resources
-                    throw new NotImplementedException();
+                    result = _dicePouch.Roll(space.QuantityPlaced(player));
+                    var diceSum = result.Sum();
+                    var wholeResources = diceSum / (int)Resource.Stone;
+                    player.PlayerBoard.Resources[Resource.Stone] += wholeResources;
                     break;
+                }
                 case BoardSpace.River:
+                {
                     // TODO: be sure to test max on food track, population, tools, resources
-                    throw new NotImplementedException();
+                    result = _dicePouch.Roll(space.QuantityPlaced(player));
+                    var diceSum = result.Sum();
+                    var wholeResources = diceSum / (int)Resource.Gold;
+                    player.PlayerBoard.Resources[Resource.Gold] += wholeResources;
                     break;
+                }
                 case BoardSpace.ToolMaker:
+                {
                     // TODO: be sure to test max on food track, population, tools, resources
                     throw new NotImplementedException();
                     break;
+                }
                 case BoardSpace.Hut:
+                {
                     // TODO: be sure to test max on food track, population, tools, resources
                     ++player.PlayerBoard.PeopleToPlace;
                     ++player.PlayerBoard.TotalPeople;
                     break;
+                }
                 case BoardSpace.Field:
+                {
                     // TODO: be sure to test max on food track, population, tools, resources
                     ++player.PlayerBoard.FoodTrack;
                     break;
+                }
                 case BoardSpace.CivilizationCardSlot1:
+                {
                     throw new NotImplementedException();
                     break;
+                }
                 case BoardSpace.CivilizationCardSlot2:
+                {
                     throw new NotImplementedException();
                     break;
+                }
                 case BoardSpace.CivilizationCardSlot3:
+                {
                     throw new NotImplementedException();
                     break;
+                }
                 case BoardSpace.CivilizationCardSlot4:
+                {
                     throw new NotImplementedException();
                     break;
+                }
                 case BoardSpace.BuildingTileSlot1:
+                {
                     throw new NotImplementedException();
                     break;
+                }
                 case BoardSpace.BuildingTileSlot2:
+                {
                     throw new NotImplementedException();
                     break;
+                }
                 case BoardSpace.BuildingTileSlot3:
+                {
                     throw new NotImplementedException();
                     break;
+                }
                 case BoardSpace.BuildingTileSlot4:
+                {
                     throw new NotImplementedException();
                     break;
+                }
                 default:
+                {
                     throw new NotImplementedException();
-                    break;
+                }
             }
 
             space.ReturnToPlayer(player);
@@ -645,7 +693,22 @@ namespace StoneAge.Core
             if (player == null)
                 return GameResponse.Fail();
 
-            throw new NotImplementedException();
+            var board = player.PlayerBoard;
+            var peopleToFeed = Math.Max(0, board.TotalPeople - board.FoodTrack);
+            player.PlayerBoard.Food = board.Food - peopleToFeed;
+
+            // TODO: support feeding with resources
+
+            player.NeedsToFeed = false;
+
+            if (!_players.Any(p => p.NeedsToFeed))
+            {
+                Phase = GamePhase.NewRoundPrep;
+                PrepareNewRound();
+                Phase = GamePhase.PlayersPlacePeople;
+            }
+
+            return GameResponse.Pass();
         }
 
         public GameResponse<int> CalculateCurrentScore(Guid playerId)

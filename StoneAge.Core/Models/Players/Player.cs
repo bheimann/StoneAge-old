@@ -15,6 +15,7 @@ namespace StoneAge.Core.Models.Players
         public PlayerBoard PlayerBoard;
         public bool WantsToBeFirstPlayer;
         public bool ReadyToStart;
+        public bool NeedsToFeed;
 
         public Player()
         {

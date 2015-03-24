@@ -8,6 +8,7 @@ using StoneAge.Core.Models.Players;
 using StoneAge.Core.Models.Cards;
 using StoneAge.Core.Models.Tools;
 
+//TODO: a number of these tests might be able to be cleaned up a little, check if using the game stats simplifies things
 namespace StoneAge.Core.Tests.Models
 {
     public abstract class GameTestBase
@@ -1125,6 +1126,8 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        // TODO: add tests to ensure player order
     }
 
     [TestFixture]
@@ -1263,6 +1266,98 @@ namespace StoneAge.Core.Tests.Models
             Assert.IsTrue(result.Successful);
             Assert.AreEqual(1, result.Value.FoodTrack);
         }
+
+        [Test]
+        public void Using_HuntingGrounds_increases_food()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            var stats = game.RequestPlayerStats(player1);
+            var preRollFood = stats.Value.Food;
+            game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
+
+            var result = game.RequestPlayerStats(player1);
+
+            Assert.IsTrue(result.Successful);
+            Assert.Less(preRollFood, result.Value.Food);
+        }
+
+        [Test]
+        public void Using_Forest_increases_Wood()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 5, BoardSpace.Forest);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            var stats = game.RequestPlayerStats(player1);
+            var preRollWood = stats.Value.Wood;
+            game.UseActionOfPeople(player1, BoardSpace.Forest);
+
+            var result = game.RequestPlayerStats(player1);
+
+            Assert.IsTrue(result.Successful);
+            Assert.Less(preRollWood, result.Value.Wood);
+        }
+
+        [Test]
+        public void Using_ClayPit_increases_Brick()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 5, BoardSpace.ClayPit);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            var stats = game.RequestPlayerStats(player1);
+            var preRollBrick = stats.Value.Brick;
+            game.UseActionOfPeople(player1, BoardSpace.ClayPit);
+
+            var result = game.RequestPlayerStats(player1);
+
+            Assert.IsTrue(result.Successful);
+            Assert.Less(preRollBrick, result.Value.Brick);
+        }
+
+        [Test]
+        public void Using_Quarry_increases_Stone()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 5, BoardSpace.Quarry);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            var stats = game.RequestPlayerStats(player1);
+            var preRollStone = stats.Value.Stone;
+            game.UseActionOfPeople(player1, BoardSpace.Quarry);
+
+            var result = game.RequestPlayerStats(player1);
+
+            Assert.IsTrue(result.Successful);
+            Assert.Less(preRollStone, result.Value.Stone);
+        }
+
+        [Test]
+        public void Using_River_increases_Gold()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 2, BoardSpace.Hut);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 1, BoardSpace.Field);
+            game.PlacePeople(player1, 2, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player1, BoardSpace.Hut);
+            game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player1, BoardSpace.Field);
+            game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
+            game.FeedPeople(player1);
+            game.FeedPeople(player2);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 6, BoardSpace.River);
+            var stats = game.RequestPlayerStats(player1);
+            var preRollGold = stats.Value.Gold;
+            game.UseActionOfPeople(player1, BoardSpace.River);
+
+            var result = game.RequestPlayerStats(player1);
+
+            Assert.IsTrue(result.Successful);
+            Assert.Less(preRollGold, result.Value.Gold);
+        }
+
+        // TODO: add tests to ensure player order
     }
 
     [TestFixture]
@@ -1419,6 +1514,20 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [Test]
+        public void Cannot_claim_lottery_result_for_a_non_existent_player()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 1, BoardSpace.BuildingTileSlot1);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 4, BoardSpace.Forest);
+            Assert.AreEqual(GamePhase.UsePeopleActions, game.Phase);
+
+            var result = game.ClaimLotteryResult(Guid.NewGuid(), 0);
+
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
@@ -1453,6 +1562,20 @@ namespace StoneAge.Core.Tests.Models
             game.Phase = phase;
 
             var result = game.TapTool(playerId, new List<Tool>{Tool.Plus1});
+
+            Assert.IsFalse(result.Successful);
+        }
+
+        [Test]
+        public void Cannot_tap_tool_for_a_non_existent_player()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 1, BoardSpace.BuildingTileSlot1);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 4, BoardSpace.Forest);
+            Assert.AreEqual(GamePhase.UsePeopleActions, game.Phase);
+
+            var result = game.TapTool(Guid.NewGuid(), new [] {Tool.Plus1});
 
             Assert.IsFalse(result.Successful);
         }
@@ -1591,6 +1714,20 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.IsFalse(result.Successful);
         }
+
+        [Test]
+        public void Cannot_use_special_action_for_a_non_existent_player()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 1, BoardSpace.BuildingTileSlot1);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player1, 4, BoardSpace.Forest);
+            Assert.AreEqual(GamePhase.UsePeopleActions, game.Phase);
+
+            var result = game.UseSpecialAction(Guid.NewGuid(), SpecialAction.Take2ResourcesCard);
+
+            Assert.IsFalse(result.Successful);
+        }
     }
 
     [TestFixture]
@@ -1605,10 +1742,13 @@ namespace StoneAge.Core.Tests.Models
             game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
             game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
             Assert.AreEqual(GamePhase.FeedPeople, game.Phase);
+            var preFeedFood = game.RequestPlayerStats(player1).Value.Food;
 
             var result = game.FeedPeople(player1);
 
             Assert.IsTrue(result.Successful);
+            var postFeedFood = game.RequestPlayerStats(player1).Value.Food;
+            Assert.AreEqual(preFeedFood, postFeedFood + 5);
         }
 
         [TestCase(GamePhase.ChoosePlayers)]
@@ -1618,12 +1758,27 @@ namespace StoneAge.Core.Tests.Models
         [TestCase(GamePhase.CheckIfEndGame)]
         [TestCase(GamePhase.NewRoundPrep)]
         [TestCase(GamePhase.FinalScoring)]
-        public void Cannot_use_special_action_in_Phase(GamePhase phase)
+        public void Cannot_feed_people_in_Phase(GamePhase phase)
         {
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
             var result = game.FeedPeople(player1);
+
+            Assert.IsFalse(result.Successful);
+        }
+
+        [Test]
+        public void Cannot_feed_people_for_a_non_existent_player()
+        {
+            SetUpStandard2PlayerGame();
+            game.PlacePeople(player1, 5, BoardSpace.HuntingGrounds);
+            game.PlacePeople(player2, 5, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player1, BoardSpace.HuntingGrounds);
+            game.UseActionOfPeople(player2, BoardSpace.HuntingGrounds);
+            Assert.AreEqual(GamePhase.FeedPeople, game.Phase);
+
+            var result = game.FeedPeople(Guid.NewGuid());
 
             Assert.IsFalse(result.Successful);
         }
