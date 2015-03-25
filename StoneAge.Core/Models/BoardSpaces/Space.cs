@@ -70,5 +70,14 @@ namespace StoneAge.Core.Models.BoardSpaces
             player.PlayerBoard.PeopleToPlace += QuantityPlaced(player);
             _quantitiesPerColor[player.Color] = 0;
         }
+
+        public bool AllowsPartialPlacement
+        {
+            get
+            {
+                // TODO: should this allow for house rules?
+                return BoardSpace == BoardSpace.HuntingGrounds;
+            }
+        }
     }
 }

@@ -444,7 +444,7 @@ namespace StoneAge.Core
             if (space.QuantityIsInvalidForSpace(quantity))
                 return GameResponse.Fail();
 
-            if(space.PlayerPreviouslyPlaced(player))
+            if(space.PlayerPreviouslyPlaced(player) && !space.AllowsPartialPlacement)
                 return GameResponse.Fail();
 
             if(space.NotAvailable(quantity))

@@ -1133,15 +1133,54 @@ namespace StoneAge.Core.Tests.Models
             SetUpStandard2PlayerGame();
 
             var result1 = game.PlacePeople(player1, 1, BoardSpace.HuntingGrounds);
-            Assert.IsTrue(result1.Successful);
             var result2 = game.PlacePeople(player2, 1, BoardSpace.HuntingGrounds);
-            Assert.IsTrue(result2.Successful);
             var result_invalid = game.PlacePeople(player2, 1, BoardSpace.Forest);
-            Assert.IsFalse(result_invalid.Successful);
             var result4 = game.PlacePeople(player1, 1, BoardSpace.Forest);
-            Assert.IsTrue(result4.Successful);
             var result5 = game.PlacePeople(player2, 1, BoardSpace.Forest);
+
+            Assert.IsTrue(result1.Successful);
+            Assert.IsTrue(result2.Successful);
+            Assert.IsFalse(result_invalid.Successful);
+            Assert.IsTrue(result4.Successful);
             Assert.IsTrue(result5.Successful);
+        }
+
+        [Test]
+        public void Cannot_place_people_in_the_same_place_twice()
+        {
+            SetUpStandard2PlayerGame();
+
+            var result1 = game.PlacePeople(player1, 1, BoardSpace.Forest);
+            var result2 = game.PlacePeople(player2, 1, BoardSpace.HuntingGrounds);
+            var result_invalid = game.PlacePeople(player1, 1, BoardSpace.Forest);
+
+            Assert.IsTrue(result1.Successful);
+            Assert.IsTrue(result2.Successful);
+            Assert.IsFalse(result_invalid.Successful);
+        }
+
+        [Test]
+        public void Can_place_people_in_the_HuntingGrounds_twice()
+        {
+            SetUpStandard2PlayerGame();
+
+            var result1 = game.PlacePeople(player1, 1, BoardSpace.HuntingGrounds);
+            var result2 = game.PlacePeople(player2, 1, BoardSpace.HuntingGrounds);
+            var result3 = game.PlacePeople(player1, 1, BoardSpace.HuntingGrounds);
+
+            Assert.IsTrue(result1.Successful);
+            Assert.IsTrue(result2.Successful);
+            Assert.IsTrue(result3.Successful);
+        }
+
+        [Test]
+        public void Cannot_place_more_people_than_player_has()
+        {
+            SetUpStandard2PlayerGame();
+
+            var result = game.PlacePeople(player1, 10, BoardSpace.HuntingGrounds);
+
+            Assert.IsFalse(result.Successful);
         }
     }
 
