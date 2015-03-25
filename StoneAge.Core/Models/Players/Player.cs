@@ -16,6 +16,7 @@ namespace StoneAge.Core.Models.Players
         public bool WantsToBeFirstPlayer;
         public bool ReadyToStart;
         public bool NeedsToFeed;
+        public BoardSpace? PayingForSpace; // TODO: should this go as a GamePhase?
 
         public Player()
         {

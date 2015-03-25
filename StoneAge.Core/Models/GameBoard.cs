@@ -1,6 +1,8 @@
-﻿using StoneAge.Core.Models.BoardSpaces;
+﻿using StoneAge.Core.Exceptions;
+using StoneAge.Core.Models.BoardSpaces;
 using StoneAge.Core.Models.BuildingTiles;
 using StoneAge.Core.Models.Cards;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -93,6 +95,29 @@ namespace StoneAge.Core.Models
                 new Space(BoardSpace.BuildingTileSlot3, new CanOnlyPlace1Person()),
                 new Space(BoardSpace.BuildingTileSlot4, new CanOnlyPlace1Person()),
             };
+        }
+
+        public Card GetCardFromSpace(BoardSpace cardSlot)
+        {
+            Card card;
+            switch (cardSlot)
+            {
+                case BoardSpace.CivilizationCardSlot1:
+                    card = CardSlot1;
+                    break;
+                case BoardSpace.CivilizationCardSlot2:
+                    card = CardSlot2;
+                    break;
+                case BoardSpace.CivilizationCardSlot3:
+                    card = CardSlot3;
+                    break;
+                case BoardSpace.CivilizationCardSlot4:
+                    card = CardSlot4;
+                    break;
+                default:
+                    throw new InvalidSpaceForCardsException(cardSlot);
+            }
+            return card;
         }
     }
 }

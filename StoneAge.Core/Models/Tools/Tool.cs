@@ -17,5 +17,10 @@
             Value = value;
             Used = false;
         }
+
+        public static Tool ByValue(int value)
+        {
+            return new Tool(value);
+        }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using StoneAge.Core.Models;
+using System;
+using StoneAge.Core.Models.Cards;
+using StoneAge.Core.Exceptions;
 
 namespace StoneAge.Core.Tests.Models
 {
@@ -27,81 +30,61 @@ namespace StoneAge.Core.Tests.Models
             Assert.AreEqual(12, board.Tool1or2Available);
             Assert.AreEqual(6, board.Tool3or4Available);
         }
-
-        // Should the spaces available be here? Probably, just stupid keeping place
-        //foreach (var space in board.Spaces)
-        //{
-        //    Assert.IsNull(space.Value.HeldBy);
-        //}
     }
 
     [TestFixture]
-    public class GameBoardTest_Next
+    public class GameBoardTest_GetCardFromSpace
     {
         [Test]
-        public void PlayersRotate()
+        public void Can_get_cards_from_CivilizationCardSlot1()
         {
-            //var board = new GameBoard(PlayerColor.Blue, PlayerColor.Red, PlayerColor.Green, PlayerColor.Yellow);
+            var board = new GameBoard();
+            board.CardSlot1 = Card.BF11;
 
-            //Assert.AreEqual(PlayerColor.Blue, board.Current.Color);
+            var card = board.GetCardFromSpace(BoardSpace.CivilizationCardSlot1);
 
-            //board.Next();
-
-            //Assert.AreEqual(PlayerColor.Red, board.Current.Color);
-
-            //board.Next();
-
-            //Assert.AreEqual(PlayerColor.Green, board.Current.Color);
-
-            //board.Next();
-
-            //Assert.AreEqual(PlayerColor.Yellow, board.Current.Color);
-
-            //board.Next();
-
-            //Assert.AreEqual(PlayerColor.Blue, board.Current.Color);
+            Assert.AreEqual(Card.BF11, card);
         }
 
         [Test]
-        public void TemporarilySelectedLocationBecomesPerminantAtEndOfTurn()
+        public void Can_get_cards_from_CivilizationCardSlot2()
         {
-            //var board = new GameBoard(PlayerColor.Blue);
+            var board = new GameBoard();
+            board.CardSlot2 = Card.BF11;
 
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].ThinkingOf, null);
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].HeldBy, null);
+            var card = board.GetCardFromSpace(BoardSpace.CivilizationCardSlot2);
 
-            //board.Spaces[BoardSpace.Forest1].ThinkingOf = PlayerColor.Blue;
-
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].ThinkingOf, PlayerColor.Blue);
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].HeldBy, null);
-
-            //board.Next();
-
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].ThinkingOf, null);
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].HeldBy, PlayerColor.Blue);
+            Assert.AreEqual(Card.BF11, card);
         }
-    }
 
-    [TestFixture]
-    public class GameBoardTest_TryToOccupySpace
-    {
         [Test]
-        public void TemporarilySelectedLocationBecomesPerminantAtEndOfTurn()
+        public void Can_get_cards_from_CivilizationCardSlot3()
         {
-            //var board = new GameBoard(PlayerColor.Blue);
+            var board = new GameBoard();
+            board.CardSlot3 = Card.BF11;
 
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].ThinkingOf, null);
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].HeldBy, null);
+            var card = board.GetCardFromSpace(BoardSpace.CivilizationCardSlot3);
 
-            //board.Spaces[BoardSpace.Forest1].ThinkingOf = PlayerColor.Blue;
+            Assert.AreEqual(Card.BF11, card);
+        }
 
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].ThinkingOf, PlayerColor.Blue);
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].HeldBy, null);
+        [Test]
+        public void Can_get_cards_from_CivilizationCardSlot4()
+        {
+            var board = new GameBoard();
+            board.CardSlot4 = Card.BF11;
 
-            //board.Next();
+            var card = board.GetCardFromSpace(BoardSpace.CivilizationCardSlot4);
 
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].ThinkingOf, null);
-            //Assert.AreEqual(board.Spaces[BoardSpace.Forest1].HeldBy, PlayerColor.Blue);
+            Assert.AreEqual(Card.BF11, card);
+        }
+
+        [Test]
+        public void Cannot_get_cards_from_other_slots()
+        {
+            var board = new GameBoard();
+
+            Assert.Throws<InvalidSpaceForCardsException>(() => board.GetCardFromSpace(BoardSpace.HuntingGrounds));
         }
     }
 }

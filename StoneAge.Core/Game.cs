@@ -459,7 +459,6 @@ namespace StoneAge.Core
             player.PlayerBoard.SetPeopleAsPlaced(quantity);
             space.Place(player, quantity);
 
-
             if (_players.Sum(p => p.PlayerBoard.PeopleToPlace) == 0)
             {
                 Phase = GamePhase.UsePeopleActions;
@@ -536,6 +535,7 @@ namespace StoneAge.Core
                     result = _dicePouch.Roll(space.QuantityPlaced(player));
                     var diceSum = result.Sum();
                     var wholeResources = diceSum / (int)Resource.Wood;
+                    Board.WoodAvailable -= wholeResources;
                     player.PlayerBoard.Resources[Resource.Wood] += wholeResources;
                     break;
                 }
@@ -545,6 +545,7 @@ namespace StoneAge.Core
                     result = _dicePouch.Roll(space.QuantityPlaced(player));
                     var diceSum = result.Sum();
                     var wholeResources = diceSum / (int)Resource.Brick;
+                    Board.BrickAvailable -= wholeResources;
                     player.PlayerBoard.Resources[Resource.Brick] += wholeResources;
                     break;
                 }
@@ -554,6 +555,7 @@ namespace StoneAge.Core
                     result = _dicePouch.Roll(space.QuantityPlaced(player));
                     var diceSum = result.Sum();
                     var wholeResources = diceSum / (int)Resource.Stone;
+                    Board.StoneAvailable -= wholeResources;
                     player.PlayerBoard.Resources[Resource.Stone] += wholeResources;
                     break;
                 }
@@ -563,13 +565,31 @@ namespace StoneAge.Core
                     result = _dicePouch.Roll(space.QuantityPlaced(player));
                     var diceSum = result.Sum();
                     var wholeResources = diceSum / (int)Resource.Gold;
+                    Board.GoldAvailable -= wholeResources;
                     player.PlayerBoard.Resources[Resource.Gold] += wholeResources;
                     break;
                 }
                 case BoardSpace.ToolMaker:
                 {
                     // TODO: be sure to test max on food track, population, tools, resources
-                    throw new NotImplementedException();
+                    var tools = player.PlayerBoard.Tools;
+                    var minValue = tools.Min(t => t.Value);
+
+                    var hasAToolFree = tools.Any(t => !t.Used);
+
+                    for (int toolPosition = 0; toolPosition < tools.Length; toolPosition++)
+                    {
+                        if (hasAToolFree && tools[toolPosition].Used)
+                            continue;
+
+                        if (tools[toolPosition].Value == minValue)
+                        {
+                            tools[toolPosition] = Tool.ByValue(minValue + 1);
+                            // TODO: remove tool from stack
+                            // TODO: add tool back to stack when upgrading from 1/2 to 3/4
+                            break;
+                        }
+                    }
                     break;
                 }
                 case BoardSpace.Hut:
@@ -587,22 +607,22 @@ namespace StoneAge.Core
                 }
                 case BoardSpace.CivilizationCardSlot1:
                 {
-                    throw new NotImplementedException();
+                    player.PayingForSpace = BoardSpace.CivilizationCardSlot1;
                     break;
                 }
                 case BoardSpace.CivilizationCardSlot2:
                 {
-                    throw new NotImplementedException();
+                    player.PayingForSpace = BoardSpace.CivilizationCardSlot2;
                     break;
                 }
                 case BoardSpace.CivilizationCardSlot3:
                 {
-                    throw new NotImplementedException();
+                    player.PayingForSpace = BoardSpace.CivilizationCardSlot3;
                     break;
                 }
                 case BoardSpace.CivilizationCardSlot4:
                 {
-                    throw new NotImplementedException();
+                    player.PayingForSpace = BoardSpace.CivilizationCardSlot4;
                     break;
                 }
                 case BoardSpace.BuildingTileSlot1:
@@ -644,7 +664,23 @@ namespace StoneAge.Core
             if (player == null)
                 return GameResponse<Card>.Fail();
 
-            throw new NotImplementedException();
+            if(!player.PayingForSpace.HasValue)
+                return GameResponse<Card>.Fail();
+
+            var cardSlot = player.PayingForSpace.Value;
+
+            Card card = Board.GetCardFromSpace(cardSlot);
+
+            int cost = (int)cardSlot - (int)BoardSpace.CivilizationCardSlot1 + 1;
+
+            foreach (var resource in resources)
+	        {
+                player.PlayerBoard.Resources[resource.Key] -= resource.Value;
+	        }
+
+            player.PayingForSpace = null;
+
+            return GameResponse<Card>.Pass(card);
         }
 
         public GameResponse<int> PayForHutTile(Guid playerId, IDictionary<Resource, int> resources)
