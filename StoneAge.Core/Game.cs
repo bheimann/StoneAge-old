@@ -95,7 +95,7 @@ namespace StoneAge.Core
 
             var playerToRemove = _players.SingleOrDefault(p => p.Id == playerId);
 
-            if(!_players.Remove(playerToRemove))
+            if (!_players.Remove(playerToRemove))
                 return GameResponse.Fail();
 
             return GameResponse.Pass();
@@ -108,7 +108,7 @@ namespace StoneAge.Core
                 return GameResponse.Fail();
 
             var player = _players.SingleOrDefault(p => p.Id == playerId);
-            if(player == null)
+            if (player == null)
                 return GameResponse.Fail();
 
             if (player.WantsToBeFirstPlayer)
@@ -306,7 +306,7 @@ namespace StoneAge.Core
                 cardsForSlots.Enqueue(Board.CardDeck.Pop());
             }
 
-            if(!gameOverSignafied)
+            if (!gameOverSignafied)
             {
                 Board.CardSlot1 = cardsForSlots.Dequeue();
                 Board.CardSlot2 = cardsForSlots.Dequeue();
@@ -354,7 +354,7 @@ namespace StoneAge.Core
 
             var playerToRename = _players.SingleOrDefault(p => p.Id == playerId);
 
-            if(playerToRename == null)
+            if (playerToRename == null)
                 return GameResponse.Fail();
 
             playerToRename.Name = newName;
@@ -444,16 +444,16 @@ namespace StoneAge.Core
             if (space.QuantityIsInvalidForSpace(quantity))
                 return GameResponse.Fail();
 
-            if(space.PlayerPreviouslyPlaced(player) && !space.AllowsPartialPlacement)
+            if (space.PlayerPreviouslyPlaced(player) && !space.AllowsPartialPlacement)
                 return GameResponse.Fail();
 
-            if(space.NotAvailable(quantity))
+            if (space.NotAvailable(quantity))
                 return GameResponse.Fail();
 
-            if(space.HasTooManyUniquePlayers())
+            if (space.HasTooManyUniquePlayers())
                 return GameResponse.Fail();
 
-            if(!player.PlayerBoard.HasAvailablePeopleToPlace(quantity))
+            if (!player.PlayerBoard.HasAvailablePeopleToPlace(quantity))
                 return GameResponse.Fail();
 
             player.PlayerBoard.SetPeopleAsPlaced(quantity);
@@ -494,11 +494,11 @@ namespace StoneAge.Core
             if (player == null)
                 return GameResponse<DiceResult>.Fail();
 
-            if(player != TurnOrder.Current)
+            if (player != TurnOrder.Current)
                 return GameResponse<DiceResult>.Fail();
 
             var space = Board.Spaces.SingleOrDefault(s => s.BoardSpace == boardSpace);
-            if(!space.PlayerPreviouslyPlaced(player))
+            if (!space.PlayerPreviouslyPlaced(player))
                 return GameResponse<DiceResult>.Fail();
 
             var diceResult = UseAction(player, space);
@@ -518,137 +518,137 @@ namespace StoneAge.Core
 
         private DiceResult UseAction(Player player, Space space)
         {
-            var result = new DiceResult(new int [0]);
+            var result = new DiceResult(new int[0]);
             switch (space.BoardSpace)
             {
                 case BoardSpace.HuntingGrounds:
-                {
-                    result = _dicePouch.Roll(space.QuantityPlaced(player));
-                    var diceSum = result.Sum();
-                    var numberOfFood = diceSum / 2;
-                    player.PlayerBoard.Food += numberOfFood;
-                    break;
-                }
-                case BoardSpace.Forest:
-                {
-                    // TODO: be sure to test max on food track, population, tools, resources
-                    result = _dicePouch.Roll(space.QuantityPlaced(player));
-                    var diceSum = result.Sum();
-                    var wholeResources = diceSum / (int)Resource.Wood;
-                    Board.WoodAvailable -= wholeResources;
-                    player.PlayerBoard.Resources[Resource.Wood] += wholeResources;
-                    break;
-                }
-                case BoardSpace.ClayPit:
-                {
-                    // TODO: be sure to test max on food track, population, tools, resources
-                    result = _dicePouch.Roll(space.QuantityPlaced(player));
-                    var diceSum = result.Sum();
-                    var wholeResources = diceSum / (int)Resource.Brick;
-                    Board.BrickAvailable -= wholeResources;
-                    player.PlayerBoard.Resources[Resource.Brick] += wholeResources;
-                    break;
-                }
-                case BoardSpace.Quarry:
-                {
-                    // TODO: be sure to test max on food track, population, tools, resources
-                    result = _dicePouch.Roll(space.QuantityPlaced(player));
-                    var diceSum = result.Sum();
-                    var wholeResources = diceSum / (int)Resource.Stone;
-                    Board.StoneAvailable -= wholeResources;
-                    player.PlayerBoard.Resources[Resource.Stone] += wholeResources;
-                    break;
-                }
-                case BoardSpace.River:
-                {
-                    // TODO: be sure to test max on food track, population, tools, resources
-                    result = _dicePouch.Roll(space.QuantityPlaced(player));
-                    var diceSum = result.Sum();
-                    var wholeResources = diceSum / (int)Resource.Gold;
-                    Board.GoldAvailable -= wholeResources;
-                    player.PlayerBoard.Resources[Resource.Gold] += wholeResources;
-                    break;
-                }
-                case BoardSpace.ToolMaker:
-                {
-                    // TODO: be sure to test max on food track, population, tools, resources
-                    var tools = player.PlayerBoard.Tools;
-                    var minValue = tools.Min(t => t.Value);
-
-                    var hasAToolFree = tools.Any(t => !t.Used);
-
-                    for (int toolPosition = 0; toolPosition < tools.Length; toolPosition++)
                     {
-                        if (hasAToolFree && tools[toolPosition].Used)
-                            continue;
-
-                        if (tools[toolPosition].Value == minValue)
-                        {
-                            tools[toolPosition] = Tool.ByValue(minValue + 1);
-                            // TODO: remove tool from stack
-                            // TODO: add tool back to stack when upgrading from 1/2 to 3/4
-                            break;
-                        }
+                        result = _dicePouch.Roll(space.QuantityPlaced(player));
+                        var diceSum = result.Sum();
+                        var numberOfFood = diceSum / 2;
+                        player.PlayerBoard.Food += numberOfFood;
+                        break;
                     }
-                    break;
-                }
+                case BoardSpace.Forest:
+                    {
+                        // TODO: be sure to test max on food track, population, tools, resources
+                        result = _dicePouch.Roll(space.QuantityPlaced(player));
+                        var diceSum = result.Sum();
+                        var wholeResources = diceSum / (int)Resource.Wood;
+                        Board.WoodAvailable -= wholeResources;
+                        player.PlayerBoard.Resources[Resource.Wood] += wholeResources;
+                        break;
+                    }
+                case BoardSpace.ClayPit:
+                    {
+                        // TODO: be sure to test max on food track, population, tools, resources
+                        result = _dicePouch.Roll(space.QuantityPlaced(player));
+                        var diceSum = result.Sum();
+                        var wholeResources = diceSum / (int)Resource.Brick;
+                        Board.BrickAvailable -= wholeResources;
+                        player.PlayerBoard.Resources[Resource.Brick] += wholeResources;
+                        break;
+                    }
+                case BoardSpace.Quarry:
+                    {
+                        // TODO: be sure to test max on food track, population, tools, resources
+                        result = _dicePouch.Roll(space.QuantityPlaced(player));
+                        var diceSum = result.Sum();
+                        var wholeResources = diceSum / (int)Resource.Stone;
+                        Board.StoneAvailable -= wholeResources;
+                        player.PlayerBoard.Resources[Resource.Stone] += wholeResources;
+                        break;
+                    }
+                case BoardSpace.River:
+                    {
+                        // TODO: be sure to test max on food track, population, tools, resources
+                        result = _dicePouch.Roll(space.QuantityPlaced(player));
+                        var diceSum = result.Sum();
+                        var wholeResources = diceSum / (int)Resource.Gold;
+                        Board.GoldAvailable -= wholeResources;
+                        player.PlayerBoard.Resources[Resource.Gold] += wholeResources;
+                        break;
+                    }
+                case BoardSpace.ToolMaker:
+                    {
+                        // TODO: be sure to test max on food track, population, tools, resources
+                        var tools = player.PlayerBoard.Tools;
+                        var minValue = tools.Min(t => t.Value);
+
+                        var hasAToolFree = tools.Any(t => !t.Used);
+
+                        for (int toolPosition = 0; toolPosition < tools.Length; toolPosition++)
+                        {
+                            if (hasAToolFree && tools[toolPosition].Used)
+                                continue;
+
+                            if (tools[toolPosition].Value == minValue)
+                            {
+                                tools[toolPosition] = Tool.ByValue(minValue + 1);
+                                // TODO: remove tool from stack
+                                // TODO: add tool back to stack when upgrading from 1/2 to 3/4
+                                break;
+                            }
+                        }
+                        break;
+                    }
                 case BoardSpace.Hut:
-                {
-                    // TODO: be sure to test max on food track, population, tools, resources
-                    ++player.PlayerBoard.PeopleToPlace;
-                    ++player.PlayerBoard.TotalPeople;
-                    break;
-                }
+                    {
+                        // TODO: be sure to test max on food track, population, tools, resources
+                        ++player.PlayerBoard.PeopleToPlace;
+                        ++player.PlayerBoard.TotalPeople;
+                        break;
+                    }
                 case BoardSpace.Field:
-                {
-                    // TODO: be sure to test max on food track, population, tools, resources
-                    ++player.PlayerBoard.FoodTrack;
-                    break;
-                }
+                    {
+                        // TODO: be sure to test max on food track, population, tools, resources
+                        ++player.PlayerBoard.FoodTrack;
+                        break;
+                    }
                 case BoardSpace.CivilizationCardSlot1:
-                {
-                    player.PayingForSpace = BoardSpace.CivilizationCardSlot1;
-                    break;
-                }
+                    {
+                        player.PayingForSpace = BoardSpace.CivilizationCardSlot1;
+                        break;
+                    }
                 case BoardSpace.CivilizationCardSlot2:
-                {
-                    player.PayingForSpace = BoardSpace.CivilizationCardSlot2;
-                    break;
-                }
+                    {
+                        player.PayingForSpace = BoardSpace.CivilizationCardSlot2;
+                        break;
+                    }
                 case BoardSpace.CivilizationCardSlot3:
-                {
-                    player.PayingForSpace = BoardSpace.CivilizationCardSlot3;
-                    break;
-                }
+                    {
+                        player.PayingForSpace = BoardSpace.CivilizationCardSlot3;
+                        break;
+                    }
                 case BoardSpace.CivilizationCardSlot4:
-                {
-                    player.PayingForSpace = BoardSpace.CivilizationCardSlot4;
-                    break;
-                }
+                    {
+                        player.PayingForSpace = BoardSpace.CivilizationCardSlot4;
+                        break;
+                    }
                 case BoardSpace.BuildingTileSlot1:
-                {
-                    throw new NotImplementedException();
-                    break;
-                }
+                    {
+                        throw new NotImplementedException();
+                        break;
+                    }
                 case BoardSpace.BuildingTileSlot2:
-                {
-                    throw new NotImplementedException();
-                    break;
-                }
+                    {
+                        throw new NotImplementedException();
+                        break;
+                    }
                 case BoardSpace.BuildingTileSlot3:
-                {
-                    throw new NotImplementedException();
-                    break;
-                }
+                    {
+                        throw new NotImplementedException();
+                        break;
+                    }
                 case BoardSpace.BuildingTileSlot4:
-                {
-                    throw new NotImplementedException();
-                    break;
-                }
+                    {
+                        throw new NotImplementedException();
+                        break;
+                    }
                 default:
-                {
-                    throw new NotImplementedException();
-                }
+                    {
+                        throw new NotImplementedException();
+                    }
             }
 
             space.ReturnToPlayer(player);
@@ -664,7 +664,7 @@ namespace StoneAge.Core
             if (player == null)
                 return GameResponse<Card>.Fail();
 
-            if(!player.PayingForSpace.HasValue)
+            if (!player.PayingForSpace.HasValue)
                 return GameResponse<Card>.Fail();
 
             var cardSlot = player.PayingForSpace.Value;
@@ -674,9 +674,9 @@ namespace StoneAge.Core
             int cost = (int)cardSlot - (int)BoardSpace.CivilizationCardSlot1 + 1;
 
             foreach (var resource in resources)
-	        {
+            {
                 player.PlayerBoard.Resources[resource.Key] -= resource.Value;
-	        }
+            }
 
             player.PayingForSpace = null;
 

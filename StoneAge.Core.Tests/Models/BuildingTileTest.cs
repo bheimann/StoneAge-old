@@ -14,7 +14,7 @@ namespace StoneAge.Core.Tests.Models
 
             Assert.AreEqual(28, count);
         }
-        
+
         [Test]
         public void AssertCalculationsAreCorrect()
         {

@@ -17,7 +17,7 @@ namespace StoneAge.Core.Tests.Models
 
         protected Guid player1;
         protected Guid player2;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -1496,7 +1496,7 @@ namespace StoneAge.Core.Tests.Models
             Assert.IsTrue(result.Successful);
 
             int cost = (int)cardSlot - (int)BoardSpace.CivilizationCardSlot1 + 1;
-            var payResult = game.PayForCard(player1, new Dictionary<Resource, int> { {Resource.Wood, cost}});
+            var payResult = game.PayForCard(player1, new Dictionary<Resource, int> { { Resource.Wood, cost } });
             Assert.IsTrue(payResult.Successful);
         }
 
@@ -1584,7 +1584,7 @@ namespace StoneAge.Core.Tests.Models
             game.UseActionOfPeople(player1, BoardSpace.CivilizationCardSlot1);
 
             var result = game.PayForCard(Guid.NewGuid(), new Dictionary<Resource, int> { { Resource.Wood, 1 } });
-            
+
             Assert.IsFalse(result.Successful);
         }
 
@@ -1765,7 +1765,7 @@ namespace StoneAge.Core.Tests.Models
             game.UseActionOfPeople(player1, BoardSpace.Forest);
             Assert.AreEqual(GamePhase.UsePeopleActions, game.Phase);
 
-            var result = game.TapTool(player1, new List<Tool>{Tool.Plus1});
+            var result = game.TapTool(player1, new List<Tool> { Tool.Plus1 });
 
             Assert.IsTrue(result.Successful);
         }
@@ -1781,7 +1781,7 @@ namespace StoneAge.Core.Tests.Models
             var playerId = game.AddPlayer().Value;
             game.Phase = phase;
 
-            var result = game.TapTool(playerId, new List<Tool>{Tool.Plus1});
+            var result = game.TapTool(playerId, new List<Tool> { Tool.Plus1 });
 
             Assert.IsFalse(result.Successful);
         }
@@ -1795,7 +1795,7 @@ namespace StoneAge.Core.Tests.Models
             game.PlacePeople(player1, 4, BoardSpace.Forest);
             Assert.AreEqual(GamePhase.UsePeopleActions, game.Phase);
 
-            var result = game.TapTool(Guid.NewGuid(), new [] {Tool.Plus1});
+            var result = game.TapTool(Guid.NewGuid(), new[] { Tool.Plus1 });
 
             Assert.IsFalse(result.Successful);
         }
