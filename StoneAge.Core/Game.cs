@@ -205,7 +205,7 @@ namespace StoneAge.Core
         private bool InitialBoardSetup()
         {
             Phase = GamePhase.SetUpBoard;
-            Board = new GameBoard();
+            Board = new StandardGameBoard();
             TurnOrder = new TurnOrder();
 
             AssignPlayerSeats();
@@ -770,7 +770,7 @@ namespace StoneAge.Core
             throw new NotImplementedException();
         }
 
-        public GameBoard Board;
+        public StandardGameBoard Board;
         private readonly IList<Player> _players = new List<Player>();
 
         //private int _current = 0;
@@ -787,7 +787,7 @@ namespace StoneAge.Core
         private readonly IPlayerBoardFactory _playerBoardFactory;
     }
 
-    // TODO: should UseTool and other subphases be added
+    // TODO: should UseTool and other subphases be added, yes!
     public enum GamePhase
     {
         ChoosePlayers,

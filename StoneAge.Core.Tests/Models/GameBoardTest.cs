@@ -13,7 +13,7 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Sets_initial_values()
         {
-            var board = new GameBoard();
+            var board = new StandardGameBoard();
 
             Assert.AreEqual(36, board.CardDeck.Count);
 
@@ -38,7 +38,7 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_get_cards_from_CivilizationCardSlot1()
         {
-            var board = new GameBoard();
+            var board = new StandardGameBoard();
             board.CardSlot1 = Card.BF11;
 
             var card = board.GetCardFromSpace(BoardSpace.CivilizationCardSlot1);
@@ -49,7 +49,7 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_get_cards_from_CivilizationCardSlot2()
         {
-            var board = new GameBoard();
+            var board = new StandardGameBoard();
             board.CardSlot2 = Card.BF11;
 
             var card = board.GetCardFromSpace(BoardSpace.CivilizationCardSlot2);
@@ -60,7 +60,7 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_get_cards_from_CivilizationCardSlot3()
         {
-            var board = new GameBoard();
+            var board = new StandardGameBoard();
             board.CardSlot3 = Card.BF11;
 
             var card = board.GetCardFromSpace(BoardSpace.CivilizationCardSlot3);
@@ -71,7 +71,7 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Can_get_cards_from_CivilizationCardSlot4()
         {
-            var board = new GameBoard();
+            var board = new StandardGameBoard();
             board.CardSlot4 = Card.BF11;
 
             var card = board.GetCardFromSpace(BoardSpace.CivilizationCardSlot4);
@@ -82,7 +82,7 @@ namespace StoneAge.Core.Tests.Models
         [Test]
         public void Cannot_get_cards_from_other_slots()
         {
-            var board = new GameBoard();
+            var board = new StandardGameBoard();
 
             Assert.Throws<InvalidSpaceForCardsException>(() => board.GetCardFromSpace(BoardSpace.HuntingGrounds));
         }

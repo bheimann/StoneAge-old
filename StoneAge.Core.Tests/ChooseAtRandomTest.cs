@@ -10,12 +10,11 @@ namespace StoneAge.Core.Tests
     public class ChooseAtRandomTest
     {
         [Test]
-        [ExpectedException]
         public void Throws_when_list_is_empty()
         {
             var list = new List<int>();
 
-            Assert.IsNotNull(list.ChooseAtRandom());
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.ChooseAtRandom());
         }
 
         [Test]

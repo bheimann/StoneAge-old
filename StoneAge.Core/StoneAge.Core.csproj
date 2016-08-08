@@ -42,7 +42,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="Models\BoardSpace.cs" />
     <Compile Include="Models\BoardSpaces\CanOnlyPlace1Person.cs" />
-    <Compile Include="Models\BoardSpaces\CanOnlyPlace2People.cs" />
+    <Compile Include="Models\BoardSpaces\MustPlaceExactly2People.cs" />
     <Compile Include="Models\BoardSpaces\CanPlace1To7People.cs" />
     <Compile Include="Models\BoardSpaces\ISpaceEvaluator.cs" />
     <Compile Include="Models\BoardSpaces\CanPlaceUnlimitedPeople.cs" />
@@ -66,7 +66,7 @@
     <Compile Include="Models\Tools\ToolExtensions.cs" />
     <Compile Include="RandomizationExtensions.cs" />
     <Compile Include="GameResponse.cs" />
-    <Compile Include="Models\GameBoard.cs" />
+    <Compile Include="Models\StandardGameBoard.cs" />
     <Compile Include="Models\Cards\Card.cs" />
     <Compile Include="Models\BuildingTiles\BuildingTile.cs" />
     <Compile Include="Models\Players\Player.cs" />

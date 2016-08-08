@@ -1,6 +1,6 @@
 ﻿namespace StoneAge.Core.Models.BoardSpaces
 {
-    public class CanOnlyPlace2People : ISpaceEvaluator
+    public class MustPlaceExactly2People : ISpaceEvaluator
     {
         public bool RangeIsValid(int quantity)
         {

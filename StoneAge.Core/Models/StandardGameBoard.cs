@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace StoneAge.Core.Models
 {
-    public class GameBoard
+    public class StandardGameBoard
     {
         //53 food counters (worth 198)
         //  16 x 1 value (16)
@@ -45,12 +45,12 @@ namespace StoneAge.Core.Models
 
         public IList<Space> Spaces;
 
-        public GameBoard()
+        public StandardGameBoard()
             : this(new StandardCardDeckCreator(), new StandardBuildingTilePileCreator())
         {
         }
 
-        public GameBoard(ICardDeckCreator cardDeckCreator,
+        public StandardGameBoard(ICardDeckCreator cardDeckCreator,
             IBuildingTilePileCreator buildingTilePileCreator)
         {
             WoodAvailable = TOTAL_WOOD;
@@ -84,7 +84,7 @@ namespace StoneAge.Core.Models
                 new Space(BoardSpace.Quarry, new CanPlace1To7People()),
                 new Space(BoardSpace.River, new CanPlace1To7People()),
                 new Space(BoardSpace.ToolMaker, new CanOnlyPlace1Person()),
-                new Space(BoardSpace.Hut, new CanOnlyPlace2People()),
+                new Space(BoardSpace.Hut, new MustPlaceExactly2People()),
                 new Space(BoardSpace.Field, new CanOnlyPlace1Person()),
                 new Space(BoardSpace.CivilizationCardSlot1, new CanOnlyPlace1Person()),
                 new Space(BoardSpace.CivilizationCardSlot2, new CanOnlyPlace1Person()),
