@@ -5,14 +5,14 @@ namespace StoneAge.Core.Models.Players
 {
     public class PlayerBoard
     {
-        public int Food;
-        public readonly IDictionary<Resource, int> Resources = new Dictionary<Resource, int>();
-        public int TotalPeople;
-        public int PeopleToPlace;
+        public int Food { get; set; }
+        public IDictionary<Resource, int> Resources { get; } = new Dictionary<Resource, int>();
+        public int TotalPeople { get; set; }
+        public int PeopleToPlace { get; set; }
         public readonly Tool[] Tools = new Tool[3];
-        public int FoodTrack;
-        public int Score;
-        public bool DroppedOut;
+        public int FoodTrack { get; set; }
+        public int Score { get; set; }
+        public bool DroppedOut { get; set; }
 
         public PlayerBoard()
             : this(STARTING_PEOPLE_COUNT, STARTING_FOOD_COUNT,

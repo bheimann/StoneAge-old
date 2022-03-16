@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using StoneAge.Core.Models;
-using System;
 using StoneAge.Core.Models.Cards;
 using StoneAge.Core.Exceptions;
 

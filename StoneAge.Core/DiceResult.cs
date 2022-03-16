@@ -29,13 +29,7 @@ namespace StoneAge.Core
             return _dice;
         }
 
-        public int this[int index]
-        {
-            get
-            {
-                return _dice[index];
-            }
-        }
+        public int this[int index] => _dice[index];
 
         public int Sum()
         {

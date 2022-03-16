@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -12,10 +8,10 @@ namespace StoneAge.WinForms.Controls
     {
         private Color _onColour;
         private Color _offColour;
-        private Rectangle _glint;
-        private Rectangle _circle;
-        private PathGradientBrush _flareBrush;
-        private Pen _outline;
+        private readonly Rectangle _glint;
+        private readonly Rectangle _circle;
+        private readonly PathGradientBrush _flareBrush;
+        private readonly Pen _outline;
 
         public Color OnColour
         {
@@ -56,7 +52,7 @@ namespace StoneAge.WinForms.Controls
             Path.AddEllipse(_glint);
             _flareBrush = new PathGradientBrush(Path);
             _flareBrush.CenterColor = Color.White;
-            _flareBrush.SurroundColors = new Color[] { Color.Transparent };
+            _flareBrush.SurroundColors = new[] { Color.Transparent };
             _flareBrush.FocusScales = new PointF(0.5F, 0.5F);
 
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
@@ -69,7 +65,7 @@ namespace StoneAge.WinForms.Controls
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            if (this.Checked)
+            if (Checked)
             {
                 if (OnColour != Color.Empty)
                 {

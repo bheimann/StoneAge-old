@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace StoneAge.WinForms
@@ -18,12 +12,12 @@ namespace StoneAge.WinForms
 
         private void WelcomeScreenForm_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void WelcomeScreenForm_KeyPress(object sender, KeyPressEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

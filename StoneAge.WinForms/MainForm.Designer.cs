@@ -390,7 +390,7 @@
             this.buttonHu2.Location = new System.Drawing.Point(613, 408);
             this.buttonHu2.Name = "buttonHu2";
             this.buttonHu2.Size = new System.Drawing.Size(23, 23);
-            this.buttonHu2.Space = StoneAge.Core.Models.BoardSpace.Hut2;
+            this.buttonHu2.Space = StoneAge.Core.Models.BoardSpace.Hut;
             this.buttonHu2.TabIndex = 47;
             this.buttonHu2.UseVisualStyleBackColor = false;
             // 
@@ -400,7 +400,7 @@
             this.buttonHu1.Location = new System.Drawing.Point(584, 408);
             this.buttonHu1.Name = "buttonHu1";
             this.buttonHu1.Size = new System.Drawing.Size(23, 23);
-            this.buttonHu1.Space = StoneAge.Core.Models.BoardSpace.Hut1;
+            this.buttonHu1.Space = StoneAge.Core.Models.BoardSpace.Hut;
             this.buttonHu1.TabIndex = 46;
             this.buttonHu1.UseVisualStyleBackColor = false;
             // 
@@ -420,7 +420,7 @@
             this.buttonRi7.Location = new System.Drawing.Point(1190, 295);
             this.buttonRi7.Name = "buttonRi7";
             this.buttonRi7.Size = new System.Drawing.Size(23, 23);
-            this.buttonRi7.Space = StoneAge.Core.Models.BoardSpace.River7;
+            this.buttonRi7.Space = StoneAge.Core.Models.BoardSpace.River;
             this.buttonRi7.TabIndex = 44;
             this.buttonRi7.UseVisualStyleBackColor = false;
             // 
@@ -430,7 +430,7 @@
             this.buttonRi6.Location = new System.Drawing.Point(1161, 295);
             this.buttonRi6.Name = "buttonRi6";
             this.buttonRi6.Size = new System.Drawing.Size(23, 23);
-            this.buttonRi6.Space = StoneAge.Core.Models.BoardSpace.River6;
+            this.buttonRi6.Space = StoneAge.Core.Models.BoardSpace.River;
             this.buttonRi6.TabIndex = 43;
             this.buttonRi6.UseVisualStyleBackColor = false;
             // 
@@ -440,7 +440,7 @@
             this.buttonRi5.Location = new System.Drawing.Point(1132, 295);
             this.buttonRi5.Name = "buttonRi5";
             this.buttonRi5.Size = new System.Drawing.Size(23, 23);
-            this.buttonRi5.Space = StoneAge.Core.Models.BoardSpace.River5;
+            this.buttonRi5.Space = StoneAge.Core.Models.BoardSpace.River;
             this.buttonRi5.TabIndex = 42;
             this.buttonRi5.UseVisualStyleBackColor = false;
             // 
@@ -450,7 +450,7 @@
             this.buttonRi4.Location = new System.Drawing.Point(1103, 295);
             this.buttonRi4.Name = "buttonRi4";
             this.buttonRi4.Size = new System.Drawing.Size(23, 23);
-            this.buttonRi4.Space = StoneAge.Core.Models.BoardSpace.River4;
+            this.buttonRi4.Space = StoneAge.Core.Models.BoardSpace.River;
             this.buttonRi4.TabIndex = 41;
             this.buttonRi4.UseVisualStyleBackColor = false;
             // 
@@ -460,7 +460,7 @@
             this.buttonRi3.Location = new System.Drawing.Point(1175, 266);
             this.buttonRi3.Name = "buttonRi3";
             this.buttonRi3.Size = new System.Drawing.Size(23, 23);
-            this.buttonRi3.Space = StoneAge.Core.Models.BoardSpace.River3;
+            this.buttonRi3.Space = StoneAge.Core.Models.BoardSpace.River;
             this.buttonRi3.TabIndex = 40;
             this.buttonRi3.UseVisualStyleBackColor = false;
             // 
@@ -470,7 +470,7 @@
             this.buttonRi2.Location = new System.Drawing.Point(1146, 266);
             this.buttonRi2.Name = "buttonRi2";
             this.buttonRi2.Size = new System.Drawing.Size(23, 23);
-            this.buttonRi2.Space = StoneAge.Core.Models.BoardSpace.River2;
+            this.buttonRi2.Space = StoneAge.Core.Models.BoardSpace.River;
             this.buttonRi2.TabIndex = 39;
             this.buttonRi2.UseVisualStyleBackColor = false;
             // 
@@ -480,7 +480,7 @@
             this.buttonRi1.Location = new System.Drawing.Point(1117, 266);
             this.buttonRi1.Name = "buttonRi1";
             this.buttonRi1.Size = new System.Drawing.Size(23, 23);
-            this.buttonRi1.Space = StoneAge.Core.Models.BoardSpace.River1;
+            this.buttonRi1.Space = StoneAge.Core.Models.BoardSpace.River;
             this.buttonRi1.TabIndex = 38;
             this.buttonRi1.UseVisualStyleBackColor = false;
             // 
@@ -490,7 +490,7 @@
             this.buttonQu7.Location = new System.Drawing.Point(890, 295);
             this.buttonQu7.Name = "buttonQu7";
             this.buttonQu7.Size = new System.Drawing.Size(23, 23);
-            this.buttonQu7.Space = StoneAge.Core.Models.BoardSpace.Quarry7;
+            this.buttonQu7.Space = StoneAge.Core.Models.BoardSpace.Quarry;
             this.buttonQu7.TabIndex = 37;
             this.buttonQu7.UseVisualStyleBackColor = false;
             // 
@@ -500,7 +500,7 @@
             this.buttonQu6.Location = new System.Drawing.Point(861, 295);
             this.buttonQu6.Name = "buttonQu6";
             this.buttonQu6.Size = new System.Drawing.Size(23, 23);
-            this.buttonQu6.Space = StoneAge.Core.Models.BoardSpace.Quarry6;
+            this.buttonQu6.Space = StoneAge.Core.Models.BoardSpace.Quarry;
             this.buttonQu6.TabIndex = 36;
             this.buttonQu6.UseVisualStyleBackColor = false;
             // 
@@ -510,7 +510,7 @@
             this.buttonQu5.Location = new System.Drawing.Point(832, 295);
             this.buttonQu5.Name = "buttonQu5";
             this.buttonQu5.Size = new System.Drawing.Size(23, 23);
-            this.buttonQu5.Space = StoneAge.Core.Models.BoardSpace.Quarry5;
+            this.buttonQu5.Space = StoneAge.Core.Models.BoardSpace.Quarry;
             this.buttonQu5.TabIndex = 35;
             this.buttonQu5.UseVisualStyleBackColor = false;
             // 
@@ -520,7 +520,7 @@
             this.buttonQu4.Location = new System.Drawing.Point(803, 295);
             this.buttonQu4.Name = "buttonQu4";
             this.buttonQu4.Size = new System.Drawing.Size(23, 23);
-            this.buttonQu4.Space = StoneAge.Core.Models.BoardSpace.Quarry4;
+            this.buttonQu4.Space = StoneAge.Core.Models.BoardSpace.Quarry;
             this.buttonQu4.TabIndex = 34;
             this.buttonQu4.UseVisualStyleBackColor = false;
             // 
@@ -530,7 +530,7 @@
             this.buttonQu3.Location = new System.Drawing.Point(875, 266);
             this.buttonQu3.Name = "buttonQu3";
             this.buttonQu3.Size = new System.Drawing.Size(23, 23);
-            this.buttonQu3.Space = StoneAge.Core.Models.BoardSpace.Quarry3;
+            this.buttonQu3.Space = StoneAge.Core.Models.BoardSpace.Quarry;
             this.buttonQu3.TabIndex = 33;
             this.buttonQu3.UseVisualStyleBackColor = false;
             // 
@@ -540,7 +540,7 @@
             this.buttonQu2.Location = new System.Drawing.Point(846, 266);
             this.buttonQu2.Name = "buttonQu2";
             this.buttonQu2.Size = new System.Drawing.Size(23, 23);
-            this.buttonQu2.Space = StoneAge.Core.Models.BoardSpace.Quarry2;
+            this.buttonQu2.Space = StoneAge.Core.Models.BoardSpace.Quarry;
             this.buttonQu2.TabIndex = 32;
             this.buttonQu2.UseVisualStyleBackColor = false;
             // 
@@ -550,7 +550,7 @@
             this.buttonQu1.Location = new System.Drawing.Point(817, 266);
             this.buttonQu1.Name = "buttonQu1";
             this.buttonQu1.Size = new System.Drawing.Size(23, 23);
-            this.buttonQu1.Space = StoneAge.Core.Models.BoardSpace.Quarry1;
+            this.buttonQu1.Space = StoneAge.Core.Models.BoardSpace.Quarry;
             this.buttonQu1.TabIndex = 31;
             this.buttonQu1.UseVisualStyleBackColor = false;
             // 
@@ -560,7 +560,7 @@
             this.buttonCP7.Location = new System.Drawing.Point(579, 295);
             this.buttonCP7.Name = "buttonCP7";
             this.buttonCP7.Size = new System.Drawing.Size(23, 23);
-            this.buttonCP7.Space = StoneAge.Core.Models.BoardSpace.ClayPit7;
+            this.buttonCP7.Space = StoneAge.Core.Models.BoardSpace.ClayPit;
             this.buttonCP7.TabIndex = 30;
             this.buttonCP7.UseVisualStyleBackColor = false;
             // 
@@ -570,7 +570,7 @@
             this.buttonCP6.Location = new System.Drawing.Point(550, 295);
             this.buttonCP6.Name = "buttonCP6";
             this.buttonCP6.Size = new System.Drawing.Size(23, 23);
-            this.buttonCP6.Space = StoneAge.Core.Models.BoardSpace.ClayPit6;
+            this.buttonCP6.Space = StoneAge.Core.Models.BoardSpace.ClayPit;
             this.buttonCP6.TabIndex = 29;
             this.buttonCP6.UseVisualStyleBackColor = false;
             // 
@@ -580,7 +580,7 @@
             this.buttonCP5.Location = new System.Drawing.Point(521, 295);
             this.buttonCP5.Name = "buttonCP5";
             this.buttonCP5.Size = new System.Drawing.Size(23, 23);
-            this.buttonCP5.Space = StoneAge.Core.Models.BoardSpace.ClayPit5;
+            this.buttonCP5.Space = StoneAge.Core.Models.BoardSpace.ClayPit;
             this.buttonCP5.TabIndex = 28;
             this.buttonCP5.UseVisualStyleBackColor = false;
             // 
@@ -590,7 +590,7 @@
             this.buttonCP4.Location = new System.Drawing.Point(492, 295);
             this.buttonCP4.Name = "buttonCP4";
             this.buttonCP4.Size = new System.Drawing.Size(23, 23);
-            this.buttonCP4.Space = StoneAge.Core.Models.BoardSpace.ClayPit4;
+            this.buttonCP4.Space = StoneAge.Core.Models.BoardSpace.ClayPit;
             this.buttonCP4.TabIndex = 27;
             this.buttonCP4.UseVisualStyleBackColor = false;
             // 
@@ -600,7 +600,7 @@
             this.buttonCP3.Location = new System.Drawing.Point(564, 266);
             this.buttonCP3.Name = "buttonCP3";
             this.buttonCP3.Size = new System.Drawing.Size(23, 23);
-            this.buttonCP3.Space = StoneAge.Core.Models.BoardSpace.ClayPit3;
+            this.buttonCP3.Space = StoneAge.Core.Models.BoardSpace.ClayPit;
             this.buttonCP3.TabIndex = 26;
             this.buttonCP3.UseVisualStyleBackColor = false;
             // 
@@ -610,7 +610,7 @@
             this.buttonCP2.Location = new System.Drawing.Point(535, 266);
             this.buttonCP2.Name = "buttonCP2";
             this.buttonCP2.Size = new System.Drawing.Size(23, 23);
-            this.buttonCP2.Space = StoneAge.Core.Models.BoardSpace.ClayPit2;
+            this.buttonCP2.Space = StoneAge.Core.Models.BoardSpace.ClayPit;
             this.buttonCP2.TabIndex = 25;
             this.buttonCP2.UseVisualStyleBackColor = false;
             // 
@@ -620,7 +620,7 @@
             this.buttonCP1.Location = new System.Drawing.Point(506, 266);
             this.buttonCP1.Name = "buttonCP1";
             this.buttonCP1.Size = new System.Drawing.Size(23, 23);
-            this.buttonCP1.Space = StoneAge.Core.Models.BoardSpace.ClayPit1;
+            this.buttonCP1.Space = StoneAge.Core.Models.BoardSpace.ClayPit;
             this.buttonCP1.TabIndex = 24;
             this.buttonCP1.UseVisualStyleBackColor = false;
             // 
@@ -630,7 +630,7 @@
             this.buttonFo7.Location = new System.Drawing.Point(321, 295);
             this.buttonFo7.Name = "buttonFo7";
             this.buttonFo7.Size = new System.Drawing.Size(23, 23);
-            this.buttonFo7.Space = StoneAge.Core.Models.BoardSpace.Forest7;
+            this.buttonFo7.Space = StoneAge.Core.Models.BoardSpace.Forest;
             this.buttonFo7.TabIndex = 23;
             this.buttonFo7.UseVisualStyleBackColor = false;
             // 
@@ -640,7 +640,7 @@
             this.buttonFo6.Location = new System.Drawing.Point(292, 295);
             this.buttonFo6.Name = "buttonFo6";
             this.buttonFo6.Size = new System.Drawing.Size(23, 23);
-            this.buttonFo6.Space = StoneAge.Core.Models.BoardSpace.Forest6;
+            this.buttonFo6.Space = StoneAge.Core.Models.BoardSpace.Forest;
             this.buttonFo6.TabIndex = 22;
             this.buttonFo6.UseVisualStyleBackColor = false;
             // 
@@ -650,7 +650,7 @@
             this.buttonFo5.Location = new System.Drawing.Point(263, 295);
             this.buttonFo5.Name = "buttonFo5";
             this.buttonFo5.Size = new System.Drawing.Size(23, 23);
-            this.buttonFo5.Space = StoneAge.Core.Models.BoardSpace.Forest5;
+            this.buttonFo5.Space = StoneAge.Core.Models.BoardSpace.Forest;
             this.buttonFo5.TabIndex = 21;
             this.buttonFo5.UseVisualStyleBackColor = false;
             // 
@@ -660,7 +660,7 @@
             this.buttonFo4.Location = new System.Drawing.Point(234, 295);
             this.buttonFo4.Name = "buttonFo4";
             this.buttonFo4.Size = new System.Drawing.Size(23, 23);
-            this.buttonFo4.Space = StoneAge.Core.Models.BoardSpace.Forest4;
+            this.buttonFo4.Space = StoneAge.Core.Models.BoardSpace.Forest;
             this.buttonFo4.TabIndex = 20;
             this.buttonFo4.UseVisualStyleBackColor = false;
             // 
@@ -670,7 +670,7 @@
             this.buttonFo3.Location = new System.Drawing.Point(306, 266);
             this.buttonFo3.Name = "buttonFo3";
             this.buttonFo3.Size = new System.Drawing.Size(23, 23);
-            this.buttonFo3.Space = StoneAge.Core.Models.BoardSpace.Forest3;
+            this.buttonFo3.Space = StoneAge.Core.Models.BoardSpace.Forest;
             this.buttonFo3.TabIndex = 19;
             this.buttonFo3.UseVisualStyleBackColor = false;
             // 
@@ -680,7 +680,7 @@
             this.buttonFo2.Location = new System.Drawing.Point(277, 266);
             this.buttonFo2.Name = "buttonFo2";
             this.buttonFo2.Size = new System.Drawing.Size(23, 23);
-            this.buttonFo2.Space = StoneAge.Core.Models.BoardSpace.Forest2;
+            this.buttonFo2.Space = StoneAge.Core.Models.BoardSpace.Forest;
             this.buttonFo2.TabIndex = 18;
             this.buttonFo2.UseVisualStyleBackColor = false;
             // 
@@ -690,7 +690,7 @@
             this.buttonFo1.Location = new System.Drawing.Point(248, 266);
             this.buttonFo1.Name = "buttonFo1";
             this.buttonFo1.Size = new System.Drawing.Size(23, 23);
-            this.buttonFo1.Space = StoneAge.Core.Models.BoardSpace.Forest1;
+            this.buttonFo1.Space = StoneAge.Core.Models.BoardSpace.Forest;
             this.buttonFo1.TabIndex = 17;
             this.buttonFo1.UseVisualStyleBackColor = false;
             // 

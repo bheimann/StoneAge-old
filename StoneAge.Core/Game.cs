@@ -56,11 +56,11 @@ namespace StoneAge.Core
     public class Game
     {
         // have a mechanism for giving status notifications
-        public bool IsThinking;
+        public bool IsThinking { get; set; }
 
         public const int MAX_PLAYER_COUNT = 4;
-        public GamePhase Phase = GamePhase.ChoosePlayers;
-        public int RoundNumber = 1; // TODO: make sure the round is incremented :)
+        public GamePhase Phase { get; set; } = GamePhase.ChoosePlayers;
+        public int RoundNumber { get; set; } = 1; // TODO: make sure the round is incremented :)
 
         public Game()
             : this(new StandardPlayerBoardFactory())
@@ -273,7 +273,7 @@ namespace StoneAge.Core
                 potentialStartPlayers.ChooseAtRandom() :
                 _players.ChooseAtRandom();
 
-            TurnOrder.SetCheiftan(player);
+            TurnOrder.SetChieftain(player);
         }
 
         private void PassOutPlayerBoards()
@@ -284,7 +284,7 @@ namespace StoneAge.Core
 
         private bool PrepareNewRound()
         {
-            var gameOverSignafied = false;
+            var gameOverSignified = false;
 
             var cardsForSlots = new Queue<Card>();
             if (Board.CardSlot1 != null)
@@ -296,17 +296,17 @@ namespace StoneAge.Core
             if (Board.CardSlot4 != null)
                 cardsForSlots.Enqueue(Board.CardSlot4);
 
-            for (int i = cardsForSlots.Count(); i < 4; i++)
+            for (int i = cardsForSlots.Count; i < 4; i++)
             {
                 if (!Board.CardDeck.Any())
                 {
-                    gameOverSignafied = true;
+                    gameOverSignified = true;
                     break;
                 }
                 cardsForSlots.Enqueue(Board.CardDeck.Pop());
             }
 
-            if (!gameOverSignafied)
+            if (!gameOverSignified)
             {
                 Board.CardSlot1 = cardsForSlots.Dequeue();
                 Board.CardSlot2 = cardsForSlots.Dequeue();
@@ -327,7 +327,7 @@ namespace StoneAge.Core
                 return true;
             }
 
-            TurnOrder.NextCheiftan();
+            TurnOrder.NextChieftain();
 
             // TODO: Check once complete as I think this isn't needed
             foreach (var player in _players)
@@ -335,7 +335,7 @@ namespace StoneAge.Core
                 player.PlayerBoard.PeopleToPlace = player.PlayerBoard.TotalPeople;
             }
 
-            return gameOverSignafied;
+            return gameOverSignified;
         }
 
         public GameResponse RenamePlayer(Guid playerId, string newName)
@@ -462,7 +462,7 @@ namespace StoneAge.Core
             if (_players.Sum(p => p.PlayerBoard.PeopleToPlace) == 0)
             {
                 Phase = GamePhase.UsePeopleActions;
-                TurnOrder.SetCheiftanToCurrent();
+                TurnOrder.SetChieftainToCurrent();
             }
             else
             {
@@ -804,7 +804,7 @@ namespace StoneAge.Core
     {
         private readonly Queue<Player> _playerQueue = new Queue<Player>();
 
-        private Chair _cheiftanChair = Chair.Standing;
+        private Chair _chieftainChair = Chair.Standing;
 
         public void AddToEnd(Player player)
         {
@@ -822,32 +822,26 @@ namespace StoneAge.Core
             return Current;
         }
 
-        public Player Current
-        {
-            get
-            {
-                return _playerQueue.Peek();
-            }
-        }
+        public Player Current => _playerQueue.Peek();
 
-        public void SetCheiftan(Player player)
+        public void SetChieftain(Player player)
         {
-            _cheiftanChair = player.Chair;
+            _chieftainChair = player.Chair;
             while (player.Chair != Next().Chair)
                 ;
         }
 
-        public void NextCheiftan()
+        public void NextChieftain()
         {
-            if (_cheiftanChair == Chair.Standing)
+            if (_chieftainChair == Chair.Standing)
                 return;
-            SetCheiftanToCurrent();
-            _cheiftanChair = Next().Chair;
+            SetChieftainToCurrent();
+            _chieftainChair = Next().Chair;
         }
 
-        public void SetCheiftanToCurrent()
+        public void SetChieftainToCurrent()
         {
-            while (_cheiftanChair != Current.Chair)
+            while (_chieftainChair != Current.Chair)
                 Next();
         }
 

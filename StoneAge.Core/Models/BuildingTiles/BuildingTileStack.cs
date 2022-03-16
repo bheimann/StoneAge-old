@@ -35,20 +35,8 @@ namespace StoneAge.Core.Models.BuildingTiles
             return null;
         }
 
-        public int Remaining
-        {
-            get
-            {
-                return _stack.Count();
-            }
-        }
+        public int Remaining => _stack.Count;
 
-        public bool IsEmpty
-        {
-            get
-            {
-                return !_stack.Any();
-            }
-        }
+        public bool IsEmpty => !_stack.Any();
     }
 }

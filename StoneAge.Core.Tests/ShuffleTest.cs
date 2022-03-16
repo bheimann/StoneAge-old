@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using StoneAge.Core.Models;
 using System.Collections.Generic;
 
 namespace StoneAge.Core.Tests

@@ -5,22 +5,22 @@ namespace StoneAge.Core.Models.Players
 {
     public class PlayerStats
     {
-        public string Name { get; private set; }
-        public Chair Chair { get; private set; }
-        public PlayerColor Color { get; private set; }
-        public PlayerMode Mode { get; private set; }
-        public bool ReadyToStart { get; private set; }
-        public int Food { get; private set; }
-        public int FoodTrack { get; private set; }
-        public int PeopleToPlace { get; private set; }
-        public int TotalPeople { get; private set; }
-        public int Wood { get; private set; }
-        public int Brick { get; private set; }
-        public int Stone { get; private set; }
-        public int Gold { get; private set; }
-        public IList<Tool> TappedTools { get; private set; }
-        public IList<Tool> UntappedTools { get; private set; }
-        public int Score { get; private set; }
+        public string Name { get; }
+        public Chair Chair { get; }
+        public PlayerColor Color { get; }
+        public PlayerMode Mode { get; }
+        public bool ReadyToStart { get; }
+        public int Food { get; }
+        public int FoodTrack { get; }
+        public int PeopleToPlace { get; }
+        public int TotalPeople { get; }
+        public int Wood { get; }
+        public int Brick { get; }
+        public int Stone { get; }
+        public int Gold { get; }
+        public IList<Tool> TappedTools { get; }
+        public IList<Tool> UntappedTools { get; }
+        public int Score { get; }
 
         public PlayerStats(Player player)
         {

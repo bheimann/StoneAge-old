@@ -2,7 +2,6 @@
 using StoneAge.Core.Models.BoardSpaces;
 using StoneAge.Core.Models.BuildingTiles;
 using StoneAge.Core.Models.Cards;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,26 +23,26 @@ namespace StoneAge.Core.Models
         public const int TOTAL_1_2_TOOLS = 12;
         public const int TOTAL_3_4_TOOLS = 6;
 
-        public int WoodAvailable;
-        public int BrickAvailable;
-        public int StoneAvailable;
-        public int GoldAvailable;
+        public int WoodAvailable { get; set; }
+        public int BrickAvailable { get; set; }
+        public int StoneAvailable { get; set; }
+        public int GoldAvailable { get; set; }
 
-        public int Tool1or2Available;
-        public int Tool3or4Available;
+        public int Tool1or2Available { get; set; }
+        public int Tool3or4Available { get; set; }
 
         public readonly Stack<Card> CardDeck;
-        public Card CardSlot1;
-        public Card CardSlot2;
-        public Card CardSlot3;
-        public Card CardSlot4;
+        public Card CardSlot1 { get; set; }
+        public Card CardSlot2 { get; set; }
+        public Card CardSlot3 { get; set; }
+        public Card CardSlot4 { get; set; }
 
         public readonly BuildingTileStack HutStack1;
         public readonly BuildingTileStack HutStack2;
         public readonly BuildingTileStack HutStack3;
         public readonly BuildingTileStack HutStack4;
 
-        public IList<Space> Spaces;
+        public IList<Space> Spaces { get; set; }
 
         public StandardGameBoard()
             : this(new StandardCardDeckCreator(), new StandardBuildingTilePileCreator())

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using StoneAge.Core;
 
@@ -39,7 +33,7 @@ namespace StoneAge.WinForms
             //if (radioButtonNone4.Checked)
             //    _game.Players[3].DroppedOut = true;
 
-            this.Close();
+            Close();
         }
 
         //private PlayerColor GetPlayerColor(RadioButton blue, RadioButton green, RadioButton red, RadioButton yellow, RadioButton none)

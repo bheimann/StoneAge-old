@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using StoneAge.Core.Exceptions;
-using System.Linq;
 
 namespace StoneAge.Core.Tests
 {

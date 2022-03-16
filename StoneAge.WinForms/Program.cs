@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace StoneAge.WinForms
@@ -8,7 +6,7 @@ namespace StoneAge.WinForms
     public static class Program
     {
         [STAThread]
-        static void Main()
+        public static void Main()
         {
             var appSettings = new AppSettings();
             Application.EnableVisualStyles();

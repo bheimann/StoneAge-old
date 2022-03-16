@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
 using System.Windows.Forms;
-using StoneAge.Core;
 using StoneAge.Core.Models;
+using StoneAge.Core.Models.Players;
 
 namespace StoneAge.WinForms.Controls
 {
@@ -31,7 +25,7 @@ namespace StoneAge.WinForms.Controls
             labelPlayerName.Text = _player.Name;
             labelPlayerName.ForeColor = _player.Color.ToDrawingColor();
             labelScoreValue.Text = _playerBoard.Score.ToString();
-            labelPeopleRemaining.Text = _playerBoard.People.ToString();
+            labelPeopleRemaining.Text = _playerBoard.PeopleToPlace.ToString();
             labelFoodTrackValue.Text = _playerBoard.FoodTrack.ToString();
             labelFoodTotal.Text = _playerBoard.Food.ToString();
             labelWoodRemaining.Text = _playerBoard.Resources[Resource.Wood].ToString();

@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using StoneAge.Core;
-using StoneAge.Core.Models;
-using StoneAge.WinForms.Controls;
+using StoneAge.Core.Models.Players;
 
 namespace StoneAge.WinForms
 {

@@ -1,18 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoneAge.Core", "StoneAge.Core\StoneAge.Core.csproj", "{0A11A0EA-BCE3-4AE7-8700-47285EAD425D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoneAge.Core.Tests", "StoneAge.Core.Tests\StoneAge.Core.Tests.csproj", "{C3E73B26-215F-4BD9-9A7A-823A0436BA8A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4262459D-ED2C-45F1-AC36-24DCC8EAB8CF}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoneAge.WinForms", "StoneAge.WinForms\StoneAge.WinForms.csproj", "{38D692A8-B17A-4286-9BC4-640FC629D118}"
 EndProject
@@ -71,5 +64,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5886E4E6-6460-476B-BE69-D5A039E4EDC8}
 	EndGlobalSection
 EndGlobal

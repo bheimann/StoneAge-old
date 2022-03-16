@@ -71,13 +71,7 @@ namespace StoneAge.Core.Models.BoardSpaces
             _quantitiesPerColor[player.Color] = 0;
         }
 
-        public bool AllowsPartialPlacement
-        {
-            get
-            {
-                // TODO: should this allow for house rules?
-                return BoardSpace == BoardSpace.HuntingGrounds;
-            }
-        }
+        // TODO: should this allow for house rules?
+        public bool AllowsPartialPlacement => BoardSpace == BoardSpace.HuntingGrounds;
     }
 }

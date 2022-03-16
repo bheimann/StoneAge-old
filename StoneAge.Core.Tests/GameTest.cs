@@ -1185,7 +1185,7 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    [Ignore]
+    [Ignore("")]
     public class GameTest_CancelLastPlacement : GameTestBase
     {
         // TODO: this will be very house rule specific, cannot go back more than x action and cannot go back if y players have done anything
@@ -1603,27 +1603,27 @@ namespace StoneAge.Core.Tests.Models
         }
 
         [Test]
-        [Ignore]
+        [Ignore("")]
         public void Must_pay_full_amount()
         {
             // TODO: test not paying enough
         }
 
         [Test]
-        [Ignore]
+        [Ignore("")]
         public void Can_pay_mixed_resources()
         {
         }
 
         [Test]
-        [Ignore]
+        [Ignore("")]
         public void Can_pay_for_card_slot()
         {
             // TODO: test all 4 card slots
         }
 
         [Test]
-        [Ignore]
+        [Ignore("")]
         public void Paying_nothing_is_same_as_skipping()
         {
             // TODO: test skipping payment
@@ -1631,7 +1631,7 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    [Ignore]
+    [Ignore("")]
     public class GameTest_PayForHutTile : GameTestBase
     {
         // TODO: inject the ability to change the huts
@@ -1682,7 +1682,7 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    [Ignore]
+    [Ignore("")]
     public class GameTest_ClaimLotteryResult : GameTestBase
     {
         // TODO: potentially inject the deck of cards to make this easier to test
@@ -1751,7 +1751,7 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    [Ignore]
+    [Ignore("")]
     public class GameTest_TapTool : GameTestBase
     {
         [Test]
@@ -1802,7 +1802,7 @@ namespace StoneAge.Core.Tests.Models
     }
 
     [TestFixture]
-    [Ignore]
+    [Ignore("")]
     public class GameTest_UseSpecialAction : GameTestBase
     {
         // TODO: potentially inject the deck of cards to make this easier to test

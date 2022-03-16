@@ -7,16 +7,16 @@ namespace StoneAge.Core.Models.Players
     {
         public const int MAX_NAME_LENGTH = 100;
 
-        public Guid Id;
-        public string Name;
-        public PlayerMode Mode;
-        public PlayerColor Color;
-        public Chair Chair;
-        public PlayerBoard PlayerBoard;
-        public bool WantsToBeFirstPlayer;
-        public bool ReadyToStart;
-        public bool NeedsToFeed;
-        public BoardSpace? PayingForSpace; // TODO: should this go as a GamePhase?
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public PlayerMode Mode { get; set; }
+        public PlayerColor Color { get; set; }
+        public Chair Chair { get; set; }
+        public PlayerBoard PlayerBoard { get; set; }
+        public bool WantsToBeFirstPlayer { get; set; }
+        public bool ReadyToStart { get; set; }
+        public bool NeedsToFeed { get; set; }
+        public BoardSpace? PayingForSpace { get; set; } // TODO: should this go as a GamePhase?
 
         public Player()
         {
@@ -26,7 +26,7 @@ namespace StoneAge.Core.Models.Players
         }
 
         private static readonly Random _random = new Random();
-        public static string[] DefaultPlayerNames = new[]
+        public static string[] DefaultPlayerNames { get; } =
         {
             "Michael",
             "Carol",
